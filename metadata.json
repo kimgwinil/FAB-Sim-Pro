@@ -1,0 +1,6 @@
+{
+  "name": "Semiconductor Packaging Simulator",
+  "description": "A 5-step simulator for semiconductor backend processes including wafer dicing, die bonding, wire bonding, molding, and testing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
