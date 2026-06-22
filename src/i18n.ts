@@ -74,7 +74,7 @@ const dict_ko: Record<string, string> = {
   "Adhesion Thickness (opt: 10-30μm)": "접착층 두께 (최적: 10-30μm)",
   "Expected Void Rate": "예상 보이드 비율",
   "Epoxy Cure Degree": "에폭시 경화도",
-  "Thermal Resistance (R_th)": "영 저항 (R_th)",
+  "Thermal Resistance (R_th)": "열 저항 (R_th)",
   "Shear Strength": "전단 강도",
   "Calculated Yield": "예측 수율",
   "Pick & Place Collet": "픽앤플레이스 콜렛",
@@ -143,7 +143,7 @@ const dict_ko: Record<string, string> = {
   "Burn-in Time (Hours)": "번인 테스트 시간 (Hours)",
   "Output Report": "테스트 결과 리포트",
   "= Final Yield": "= 최종 수율",
-  "DUT": "DUT (피검사 칩)",
+  "DUT": "DUT (검사 대상 칩)",
   "GOOD BATCH": "양호 배치",
   "MARGINAL": "경계",
   "CRITICAL FAIL": "중대 불량",
@@ -155,7 +155,7 @@ const dict_ko: Record<string, string> = {
   "Theoretical Background": "이론적 배경",
   "Practice Theory": "실습 이론",
   "Core Physical Theory": "핵심 물리/화학 이론",
-  "Brittle Fracture Mechanics": "브리틀 파괴 역학",
+  "Brittle Fracture Mechanics": "취성 파괴 역학",
   "Silicon is a brittle material, crack propagation follows Griffith theory": "실리콘은 취성 재료로, 균열 전파는 Griffith 파괴 이론을 따름",
   "Stress Intensity Factor": "응력 확대 계수",
   "Cutting Force Model": "절삭력 모델",
@@ -281,7 +281,7 @@ const dict_ko: Record<string, string> = {
   "High Void": "보이드 높음",
   "Optimal": "최적 조건",
   "High Flash": "플래시 발생",
-  "Reliability Bathtub Curve": "신뢰성 배스터브 곡선",
+  "Reliability Bathtub Curve": "신뢰성 욕조 곡선",
   "Infant Mortality → Random Failure → Wear-out Failure": "초기불량 → 우발고장 → 마모고장",
   "Weibull Distribution": "Weibull 분포",
   "Burn-in Acceleration Model (Arrhenius)": "번인 가속 모델 (Arrhenius)",
@@ -597,7 +597,7 @@ export function useTranslation() {
   const t = (text: string) => {
     if (language === 'en') return quiz_en[text] || text;
     if (language === 'ko') return dict_ko[text] || text;
-    if (language === 'ar') return dict_ar[text] || text;
+    if (language === 'ar') return dict_ar[text] || quiz_en[text] || text;
     return text;
   };
   

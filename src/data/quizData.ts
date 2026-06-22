@@ -6,6 +6,16 @@ export const dicingQuestions: Question[] = [
   { id: 'dq3', questionKey: 'D_Q3', optionsKeys: ['D_Q3_O1', 'D_Q3_O2', 'D_Q3_O3', 'D_Q3_O4'], correctIndex: 2, explanationKey: 'D_Q3_EXP' },
   { id: 'dq4', questionKey: 'D_Q4', optionsKeys: ['D_Q4_O1', 'D_Q4_O2', 'D_Q4_O3', 'D_Q4_O4'], correctIndex: 2, explanationKey: 'D_Q4_EXP' },
   { id: 'dq5', questionKey: 'D_Q5', optionsKeys: ['D_Q5_O1', 'D_Q5_O2', 'D_Q5_O3', 'D_Q5_O4'], correctIndex: 0, explanationKey: 'D_Q5_EXP' },
+  { id: 'dq6', questionKey: 'D_Q6', optionsKeys: ['D_Q6_O1', 'D_Q6_O2', 'D_Q6_O3', 'D_Q6_O4'], correctIndex: 1, explanationKey: 'D_Q6_EXP' },
+  { id: 'dq7', questionKey: 'D_Q7', optionsKeys: ['D_Q7_O1', 'D_Q7_O2', 'D_Q7_O3', 'D_Q7_O4'], correctIndex: 2, explanationKey: 'D_Q7_EXP' },
+  { id: 'dq8', questionKey: 'D_Q8', optionsKeys: ['D_Q8_O1', 'D_Q8_O2', 'D_Q8_O3', 'D_Q8_O4'], correctIndex: 0, explanationKey: 'D_Q8_EXP' },
+  { id: 'dq9', questionKey: 'D_Q9', optionsKeys: ['D_Q9_O1', 'D_Q9_O2', 'D_Q9_O3', 'D_Q9_O4'], correctIndex: 2, explanationKey: 'D_Q9_EXP' },
+  { id: 'dq10', questionKey: 'D_Q10', optionsKeys: ['D_Q10_O1', 'D_Q10_O2', 'D_Q10_O3', 'D_Q10_O4'], correctIndex: 1, explanationKey: 'D_Q10_EXP' },
+  { id: 'dq11', questionKey: 'D_Q11', optionsKeys: ['D_Q11_O1', 'D_Q11_O2', 'D_Q11_O3', 'D_Q11_O4'], correctIndex: 3, explanationKey: 'D_Q11_EXP' },
+  { id: 'dq12', questionKey: 'D_Q12', optionsKeys: ['D_Q12_O1', 'D_Q12_O2', 'D_Q12_O3', 'D_Q12_O4'], correctIndex: 0, explanationKey: 'D_Q12_EXP' },
+  { id: 'dq13', questionKey: 'D_Q13', optionsKeys: ['D_Q13_O1', 'D_Q13_O2', 'D_Q13_O3', 'D_Q13_O4'], correctIndex: 2, explanationKey: 'D_Q13_EXP' },
+  { id: 'dq14', questionKey: 'D_Q14', optionsKeys: ['D_Q14_O1', 'D_Q14_O2', 'D_Q14_O3', 'D_Q14_O4'], correctIndex: 1, explanationKey: 'D_Q14_EXP' },
+  { id: 'dq15', questionKey: 'D_Q15', optionsKeys: ['D_Q15_O1', 'D_Q15_O2', 'D_Q15_O3', 'D_Q15_O4'], correctIndex: 3, explanationKey: 'D_Q15_EXP' },
 ];
 
 export const bondingQuestions: Question[] = [
@@ -14,6 +24,16 @@ export const bondingQuestions: Question[] = [
   { id: 'bq3', questionKey: 'B_Q3', optionsKeys: ['B_Q3_O1', 'B_Q3_O2', 'B_Q3_O3', 'B_Q3_O4'], correctIndex: 1, explanationKey: 'B_Q3_EXP' },
   { id: 'bq4', questionKey: 'B_Q4', optionsKeys: ['B_Q4_O1', 'B_Q4_O2', 'B_Q4_O3', 'B_Q4_O4'], correctIndex: 1, explanationKey: 'B_Q4_EXP' },
   { id: 'bq5', questionKey: 'B_Q5', optionsKeys: ['B_Q5_O1', 'B_Q5_O2', 'B_Q5_O3', 'B_Q5_O4'], correctIndex: 2, explanationKey: 'B_Q5_EXP' },
+  { id: 'bq6', questionKey: 'B_Q6', optionsKeys: ['B_Q6_O1', 'B_Q6_O2', 'B_Q6_O3', 'B_Q6_O4'], correctIndex: 0, explanationKey: 'B_Q6_EXP' },
+  { id: 'bq7', questionKey: 'B_Q7', optionsKeys: ['B_Q7_O1', 'B_Q7_O2', 'B_Q7_O3', 'B_Q7_O4'], correctIndex: 2, explanationKey: 'B_Q7_EXP' },
+  { id: 'bq8', questionKey: 'B_Q8', optionsKeys: ['B_Q8_O1', 'B_Q8_O2', 'B_Q8_O3', 'B_Q8_O4'], correctIndex: 1, explanationKey: 'B_Q8_EXP' },
+  { id: 'bq9', questionKey: 'B_Q9', optionsKeys: ['B_Q9_O1', 'B_Q9_O2', 'B_Q9_O3', 'B_Q9_O4'], correctIndex: 3, explanationKey: 'B_Q9_EXP' },
+  { id: 'bq10', questionKey: 'B_Q10', optionsKeys: ['B_Q10_O1', 'B_Q10_O2', 'B_Q10_O3', 'B_Q10_O4'], correctIndex: 0, explanationKey: 'B_Q10_EXP' },
+  { id: 'bq11', questionKey: 'B_Q11', optionsKeys: ['B_Q11_O1', 'B_Q11_O2', 'B_Q11_O3', 'B_Q11_O4'], correctIndex: 2, explanationKey: 'B_Q11_EXP' },
+  { id: 'bq12', questionKey: 'B_Q12', optionsKeys: ['B_Q12_O1', 'B_Q12_O2', 'B_Q12_O3', 'B_Q12_O4'], correctIndex: 1, explanationKey: 'B_Q12_EXP' },
+  { id: 'bq13', questionKey: 'B_Q13', optionsKeys: ['B_Q13_O1', 'B_Q13_O2', 'B_Q13_O3', 'B_Q13_O4'], correctIndex: 3, explanationKey: 'B_Q13_EXP' },
+  { id: 'bq14', questionKey: 'B_Q14', optionsKeys: ['B_Q14_O1', 'B_Q14_O2', 'B_Q14_O3', 'B_Q14_O4'], correctIndex: 0, explanationKey: 'B_Q14_EXP' },
+  { id: 'bq15', questionKey: 'B_Q15', optionsKeys: ['B_Q15_O1', 'B_Q15_O2', 'B_Q15_O3', 'B_Q15_O4'], correctIndex: 2, explanationKey: 'B_Q15_EXP' },
 ];
 
 export const wireQuestions: Question[] = [
@@ -22,6 +42,16 @@ export const wireQuestions: Question[] = [
   { id: 'wq3', questionKey: 'W_Q3', optionsKeys: ['W_Q3_O1', 'W_Q3_O2', 'W_Q3_O3', 'W_Q3_O4'], correctIndex: 1, explanationKey: 'W_Q3_EXP' },
   { id: 'wq4', questionKey: 'W_Q4', optionsKeys: ['W_Q4_O1', 'W_Q4_O2', 'W_Q4_O3', 'W_Q4_O4'], correctIndex: 1, explanationKey: 'W_Q4_EXP' },
   { id: 'wq5', questionKey: 'W_Q5', optionsKeys: ['W_Q5_O1', 'W_Q5_O2', 'W_Q5_O3', 'W_Q5_O4'], correctIndex: 2, explanationKey: 'W_Q5_EXP' },
+  { id: 'wq6', questionKey: 'W_Q6', optionsKeys: ['W_Q6_O1', 'W_Q6_O2', 'W_Q6_O3', 'W_Q6_O4'], correctIndex: 0, explanationKey: 'W_Q6_EXP' },
+  { id: 'wq7', questionKey: 'W_Q7', optionsKeys: ['W_Q7_O1', 'W_Q7_O2', 'W_Q7_O3', 'W_Q7_O4'], correctIndex: 2, explanationKey: 'W_Q7_EXP' },
+  { id: 'wq8', questionKey: 'W_Q8', optionsKeys: ['W_Q8_O1', 'W_Q8_O2', 'W_Q8_O3', 'W_Q8_O4'], correctIndex: 1, explanationKey: 'W_Q8_EXP' },
+  { id: 'wq9', questionKey: 'W_Q9', optionsKeys: ['W_Q9_O1', 'W_Q9_O2', 'W_Q9_O3', 'W_Q9_O4'], correctIndex: 3, explanationKey: 'W_Q9_EXP' },
+  { id: 'wq10', questionKey: 'W_Q10', optionsKeys: ['W_Q10_O1', 'W_Q10_O2', 'W_Q10_O3', 'W_Q10_O4'], correctIndex: 0, explanationKey: 'W_Q10_EXP' },
+  { id: 'wq11', questionKey: 'W_Q11', optionsKeys: ['W_Q11_O1', 'W_Q11_O2', 'W_Q11_O3', 'W_Q11_O4'], correctIndex: 2, explanationKey: 'W_Q11_EXP' },
+  { id: 'wq12', questionKey: 'W_Q12', optionsKeys: ['W_Q12_O1', 'W_Q12_O2', 'W_Q12_O3', 'W_Q12_O4'], correctIndex: 1, explanationKey: 'W_Q12_EXP' },
+  { id: 'wq13', questionKey: 'W_Q13', optionsKeys: ['W_Q13_O1', 'W_Q13_O2', 'W_Q13_O3', 'W_Q13_O4'], correctIndex: 3, explanationKey: 'W_Q13_EXP' },
+  { id: 'wq14', questionKey: 'W_Q14', optionsKeys: ['W_Q14_O1', 'W_Q14_O2', 'W_Q14_O3', 'W_Q14_O4'], correctIndex: 0, explanationKey: 'W_Q14_EXP' },
+  { id: 'wq15', questionKey: 'W_Q15', optionsKeys: ['W_Q15_O1', 'W_Q15_O2', 'W_Q15_O3', 'W_Q15_O4'], correctIndex: 2, explanationKey: 'W_Q15_EXP' },
 ];
 
 export const moldingQuestions: Question[] = [
@@ -30,6 +60,16 @@ export const moldingQuestions: Question[] = [
   { id: 'mq3', questionKey: 'M_Q3', optionsKeys: ['M_Q3_O1', 'M_Q3_O2', 'M_Q3_O3', 'M_Q3_O4'], correctIndex: 3, explanationKey: 'M_Q3_EXP' },
   { id: 'mq4', questionKey: 'M_Q4', optionsKeys: ['M_Q4_O1', 'M_Q4_O2', 'M_Q4_O3', 'M_Q4_O4'], correctIndex: 1, explanationKey: 'M_Q4_EXP' },
   { id: 'mq5', questionKey: 'M_Q5', optionsKeys: ['M_Q5_O1', 'M_Q5_O2', 'M_Q5_O3', 'M_Q5_O4'], correctIndex: 2, explanationKey: 'M_Q5_EXP' },
+  { id: 'mq6', questionKey: 'M_Q6', optionsKeys: ['M_Q6_O1', 'M_Q6_O2', 'M_Q6_O3', 'M_Q6_O4'], correctIndex: 0, explanationKey: 'M_Q6_EXP' },
+  { id: 'mq7', questionKey: 'M_Q7', optionsKeys: ['M_Q7_O1', 'M_Q7_O2', 'M_Q7_O3', 'M_Q7_O4'], correctIndex: 2, explanationKey: 'M_Q7_EXP' },
+  { id: 'mq8', questionKey: 'M_Q8', optionsKeys: ['M_Q8_O1', 'M_Q8_O2', 'M_Q8_O3', 'M_Q8_O4'], correctIndex: 1, explanationKey: 'M_Q8_EXP' },
+  { id: 'mq9', questionKey: 'M_Q9', optionsKeys: ['M_Q9_O1', 'M_Q9_O2', 'M_Q9_O3', 'M_Q9_O4'], correctIndex: 3, explanationKey: 'M_Q9_EXP' },
+  { id: 'mq10', questionKey: 'M_Q10', optionsKeys: ['M_Q10_O1', 'M_Q10_O2', 'M_Q10_O3', 'M_Q10_O4'], correctIndex: 0, explanationKey: 'M_Q10_EXP' },
+  { id: 'mq11', questionKey: 'M_Q11', optionsKeys: ['M_Q11_O1', 'M_Q11_O2', 'M_Q11_O3', 'M_Q11_O4'], correctIndex: 2, explanationKey: 'M_Q11_EXP' },
+  { id: 'mq12', questionKey: 'M_Q12', optionsKeys: ['M_Q12_O1', 'M_Q12_O2', 'M_Q12_O3', 'M_Q12_O4'], correctIndex: 1, explanationKey: 'M_Q12_EXP' },
+  { id: 'mq13', questionKey: 'M_Q13', optionsKeys: ['M_Q13_O1', 'M_Q13_O2', 'M_Q13_O3', 'M_Q13_O4'], correctIndex: 3, explanationKey: 'M_Q13_EXP' },
+  { id: 'mq14', questionKey: 'M_Q14', optionsKeys: ['M_Q14_O1', 'M_Q14_O2', 'M_Q14_O3', 'M_Q14_O4'], correctIndex: 0, explanationKey: 'M_Q14_EXP' },
+  { id: 'mq15', questionKey: 'M_Q15', optionsKeys: ['M_Q15_O1', 'M_Q15_O2', 'M_Q15_O3', 'M_Q15_O4'], correctIndex: 2, explanationKey: 'M_Q15_EXP' },
 ];
 
 export const testQuestions: Question[] = [
@@ -38,4 +78,14 @@ export const testQuestions: Question[] = [
   { id: 'tq3', questionKey: 'T_Q3', optionsKeys: ['T_Q3_O1', 'T_Q3_O2', 'T_Q3_O3', 'T_Q3_O4'], correctIndex: 2, explanationKey: 'T_Q3_EXP' },
   { id: 'tq4', questionKey: 'T_Q4', optionsKeys: ['T_Q4_O1', 'T_Q4_O2', 'T_Q4_O3', 'T_Q4_O4'], correctIndex: 1, explanationKey: 'T_Q4_EXP' },
   { id: 'tq5', questionKey: 'T_Q5', optionsKeys: ['T_Q5_O1', 'T_Q5_O2', 'T_Q5_O3', 'T_Q5_O4'], correctIndex: 1, explanationKey: 'T_Q5_EXP' },
+  { id: 'tq6', questionKey: 'T_Q6', optionsKeys: ['T_Q6_O1', 'T_Q6_O2', 'T_Q6_O3', 'T_Q6_O4'], correctIndex: 0, explanationKey: 'T_Q6_EXP' },
+  { id: 'tq7', questionKey: 'T_Q7', optionsKeys: ['T_Q7_O1', 'T_Q7_O2', 'T_Q7_O3', 'T_Q7_O4'], correctIndex: 2, explanationKey: 'T_Q7_EXP' },
+  { id: 'tq8', questionKey: 'T_Q8', optionsKeys: ['T_Q8_O1', 'T_Q8_O2', 'T_Q8_O3', 'T_Q8_O4'], correctIndex: 1, explanationKey: 'T_Q8_EXP' },
+  { id: 'tq9', questionKey: 'T_Q9', optionsKeys: ['T_Q9_O1', 'T_Q9_O2', 'T_Q9_O3', 'T_Q9_O4'], correctIndex: 3, explanationKey: 'T_Q9_EXP' },
+  { id: 'tq10', questionKey: 'T_Q10', optionsKeys: ['T_Q10_O1', 'T_Q10_O2', 'T_Q10_O3', 'T_Q10_O4'], correctIndex: 0, explanationKey: 'T_Q10_EXP' },
+  { id: 'tq11', questionKey: 'T_Q11', optionsKeys: ['T_Q11_O1', 'T_Q11_O2', 'T_Q11_O3', 'T_Q11_O4'], correctIndex: 2, explanationKey: 'T_Q11_EXP' },
+  { id: 'tq12', questionKey: 'T_Q12', optionsKeys: ['T_Q12_O1', 'T_Q12_O2', 'T_Q12_O3', 'T_Q12_O4'], correctIndex: 1, explanationKey: 'T_Q12_EXP' },
+  { id: 'tq13', questionKey: 'T_Q13', optionsKeys: ['T_Q13_O1', 'T_Q13_O2', 'T_Q13_O3', 'T_Q13_O4'], correctIndex: 3, explanationKey: 'T_Q13_EXP' },
+  { id: 'tq14', questionKey: 'T_Q14', optionsKeys: ['T_Q14_O1', 'T_Q14_O2', 'T_Q14_O3', 'T_Q14_O4'], correctIndex: 0, explanationKey: 'T_Q14_EXP' },
+  { id: 'tq15', questionKey: 'T_Q15', optionsKeys: ['T_Q15_O1', 'T_Q15_O2', 'T_Q15_O3', 'T_Q15_O4'], correctIndex: 2, explanationKey: 'T_Q15_EXP' },
 ];
