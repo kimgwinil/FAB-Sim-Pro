@@ -27,6 +27,9 @@ export function Quiz({ questions }: QuizProps) {
 
   return (
     <div className="space-y-6">
+      <div className="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+        <strong>{t('Quiz Scope')}:</strong> {t('Questions are limited to the currently selected process theory and simulator variables.')}
+      </div>
       {questions.map((q, qIndex) => {
         const isAnswered = answers[q.id] !== undefined;
         const selectedIndex = answers[q.id];

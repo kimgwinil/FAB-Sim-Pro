@@ -6,13 +6,16 @@ import { ShieldAlert, ArrowDown } from 'lucide-react';
 import { useTranslation } from '../i18n';
 import { Quiz } from '../components/Quiz';
 import { bondingQuestions } from '../data/quizData';
-import { theoryData } from '../data/theoryData';
+import { getTheoryChapter } from '../data/theoryData';
+import { TheoryView } from '../components/TheoryView';
+import { Callout } from '../components/SvgCallout';
 
 export function DieBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
   const { bondingInputs, setBondingInputs, setYields } = useAppContext();
   const { t, language } = useTranslation();
 
   const { dispense, temp, time, pressure } = bondingInputs;
+  const theory = getTheoryChapter('dieBonding', language);
 
   // Calculators
   const dieArea = 100; // 10x10 mm
@@ -57,45 +60,17 @@ export function DieBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
         {mode === 'theory' && (
            <Card className="bg-slate-50 border-slate-200 shadow-inner max-w-4xl">
              <CardHeader title={t('Practice Theory')} icon={<ShieldAlert className="w-5 h-5 text-blue-600" />} />
-             <CardContent className="space-y-6">
-                <div>
-                  <h4 className="font-semibold text-slate-900 leading-tight mb-3 text-lg border-b pb-2">
-                    {theoryData.dieBonding[language as 'en'|'ko'|'ar']?.title || theoryData.dieBonding.en.title}
-                  </h4>
-                  <div className="prose prose-sm prose-slate text-sm text-slate-700">
-                    {(theoryData.dieBonding[language as 'en'|'ko'|'ar']?.content || theoryData.dieBonding.en.content).split('\n\n').map((paragraph, idx) => (
-                        <p key={idx} className="leading-relaxed mb-3 break-keep">{paragraph}</p>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-200">
-                 <h4 className="font-semibold text-slate-900 mb-4">{t('Key Control Variables')}</h4>
-                 <div className="overflow-x-auto border border-slate-200 rounded-lg bg-white">
-                   <table className="w-full text-sm text-left">
-                     <thead className="bg-slate-100">
-                       <tr><th className="px-4 py-3 border">{t('Variable')}</th><th className="px-4 py-3 border">{t('Impact')}</th></tr>
-                     </thead>
-                     <tbody>
-                       <tr><td className="px-4 py-3 border font-medium">Dispense Amt</td><td className="px-4 py-3 border">{t('Voids, fillet shape')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Cure Temp</td><td className="px-4 py-3 border">{t('Cure degree, stress')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Cure Time</td><td className="px-4 py-3 border">{t('Adhesion strength')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Bond Pressure</td><td className="px-4 py-3 border">{t('Adhesion thickness')}</td></tr>
-                     </tbody>
-                   </table>
-                 </div>
-                </div>
+             <CardContent>
+                <TheoryView title={theory.title} content={theory.content} />
              </CardContent>
            </Card>
         )}
 
-        {mode === 'sim' && <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
-          <div className="lg:col-span-8 flex flex-col">
-            <div className="flex-1 min-h-[300px]">
-              <BondingVisualizer dispense={dispense} time={time} pressure={pressure} />
-            </div>
+        {mode === 'sim' && <div className="flex flex-col gap-4">
+          <div className="mx-auto w-full max-w-[760px]">
+            <BondingVisualizer dispense={dispense} time={time} pressure={pressure} />
           </div>
-          <div className="lg:col-span-4 flex flex-col gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader title={t('Bonding Parameters')} />
               <CardContent className="space-y-6">
@@ -157,77 +132,64 @@ export function DieBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
 
 function BondingVisualizer({ dispense, time, pressure }: { dispense: number, time: number, pressure: number }) {
   const { t } = useTranslation();
+  const dieY = Math.max(108, 176 - pressure * 1.35);
+  const epoxyWidth = Math.min(150, 54 + dispense * 150 + pressure * 0.9);
+  const epoxyHeight = Math.max(6, 18 + dispense * 20 - pressure * 0.16);
+  const curePct = Math.min(100, (time / 120) * 100);
   return (
     <Card className="bg-[#0f172a] border-slate-700 shadow-2xl relative overflow-hidden">
-      <CardContent className="h-72 relative flex items-center justify-center p-0 flex-col">
-        {/* Engineering Background Grid */}
-        <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none"></div>
+      <CardContent className="p-0">
+        <svg viewBox="0 0 760 300" className="w-full block select-none" style={{ aspectRatio: '760 / 300' }}>
+          <defs>
+            <pattern id="bond-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M20 0H0V20" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+            </pattern>
+            <linearGradient id="leadframe-metal" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#fbbf24" />
+              <stop offset="55%" stopColor="#b45309" />
+              <stop offset="100%" stopColor="#78350f" />
+            </linearGradient>
+            <linearGradient id="collet-metal" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#cbd5e1" />
+              <stop offset="100%" stopColor="#475569" />
+            </linearGradient>
+            <radialGradient id="epoxy-glow">
+              <stop offset="0%" stopColor="#fb7185" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#991b1b" stopOpacity="0.9" />
+            </radialGradient>
+          </defs>
+          <rect width="760" height="300" fill="url(#bond-grid)" />
+          <rect x="238" y="232" width="284" height="18" rx="3" fill="url(#leadframe-metal)" stroke="#f59e0b" strokeWidth="1.3" />
+          <rect x="272" y="220" width="216" height="10" rx="5" fill="#fbbf24" opacity="0.32" />
+          <ellipse cx="380" cy="224" rx={epoxyWidth / 2} ry={epoxyHeight} fill="url(#epoxy-glow)" stroke="#fecaca" strokeWidth="1" opacity="0.96" />
+          <rect x="308" y={dieY} width="144" height="18" rx="2" fill="#cbd5e1" stroke="#f8fafc" strokeWidth="1.2" />
+          <g opacity="0.85">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <line key={i} x1={318 + i * 18} y1={dieY + 4} x2={318 + i * 18} y2={dieY + 14} stroke="#64748b" strokeWidth="0.8" />
+            ))}
+          </g>
+          <rect x="352" y="54" width="56" height={Math.max(42, dieY - 56)} rx="5" fill="url(#collet-metal)" stroke="#94a3b8" strokeWidth="1.5" />
+          <rect x="362" y="54" width="36" height={Math.max(42, dieY - 56)} fill="#0f172a" opacity="0.22" />
+          <path d={`M352 ${dieY - 4} L408 ${dieY - 4} L452 ${dieY} L308 ${dieY} Z`} fill="#64748b" stroke="#cbd5e1" strokeWidth="1" />
+          <g opacity={curePct / 120 + 0.2}>
+            <rect x="232" y="250" width="296" height="22" fill="#f97316" opacity="0.12" />
+            {[285, 330, 375, 420, 465].map((x, i) => (
+              <rect key={x} x={x} y="260" width="28" height="4" rx="2" fill="#fb923c" opacity="0.75">
+                <animate attributeName="opacity" values="0.35;0.9;0.35" dur="1.4s" begin={`${i * 0.18}s`} repeatCount="indefinite" />
+              </rect>
+            ))}
+          </g>
+          <path d={`M454 ${dieY + 8} C496 ${dieY + 20}, 504 212, 522 232`} fill="none" stroke="#fb7185" strokeWidth="2" strokeDasharray="5 5" opacity="0.55" />
 
-        {/* --- Labels (Positioned at edges) --- */}
-        <div className="absolute top-4 left-4 z-10 flex flex-col gap-1 items-start">
-          <div className="text-white text-[10px] bg-slate-800/80 px-2 py-1 rounded border border-slate-600 backdrop-blur-sm flex items-center gap-2">
-            <div className="w-2 h-2 rounded-sm bg-slate-400"></div>{t('Pick & Place Collet')}
-          </div>
-          <div className="text-white text-[10px] bg-slate-800/80 px-2 py-1 rounded border border-slate-600 backdrop-blur-sm flex items-center gap-2 mt-2">
-            <div className="w-2 h-2 rounded-sm bg-slate-200"></div>{t('Silicon Die')}
-          </div>
-        </div>
-
-        <div className="absolute top-4 right-4 z-10 flex flex-col gap-1 items-end">
-          <div className="text-[10px] bg-slate-800/80 px-2 py-1 rounded border border-red-500/50 backdrop-blur-sm flex items-center gap-2 text-red-200">
-            {t('Conductive Epoxy')}<div className="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_5px_red]"></div>
-          </div>
-          <div className="text-[10px] text-amber-200 bg-slate-800/80 px-2 py-1 rounded border border-amber-600/50 backdrop-blur-sm flex items-center gap-2 mt-2">
-            {t('Leadframe (Alloy 42)')}<div className="w-2 h-2 rounded-sm bg-amber-700"></div>
-          </div>
-        </div>
-
-        {/* --- Animated Simulator Elements --- */}
-        
-        {/* Heat Effect from Oven */}
-        <div className="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-orange-600 to-transparent z-0 transition-opacity duration-700 pointer-events-none mix-blend-screen" style={{ opacity: time / 200 }}></div>
-
-        {/* Leadframe Base Layout */}
-        <div className="absolute bottom-[40px] w-full flex justify-center z-10">
-           {/* Leadframe Segment */}
-           <div className="w-72 h-4 bg-gradient-to-b from-amber-600 to-amber-800 shadow-lg border-y border-amber-900 rounded-sm relative flex justify-center">
-             
-             {/* Epoxy Dispense Dot (expands based on dispense amt and pressure) */}
-             <div className="absolute bottom-full bg-red-600/90 rounded-t-full transition-all duration-300 z-10 shadow-[0_0_15px_rgba(220,38,38,0.7)]" 
-               style={{ 
-                 width: `${dispense * 150 + pressure * 1.5}px`, 
-                 height: `${dispense * 40 - (pressure / 2) + 5}px`, 
-                 marginBottom: '-1px' 
-               }}>
-             </div>
-
-             {/* Heating Elements (glowing wires below Leadframe) */}
-             <div className="absolute top-full w-48 h-2 flex justify-around mt-2 opacity-60">
-                 <div className="w-6 h-1 rounded bg-orange-500 animate-pulse shadow-[0_0_8px_rgba(249,115,22,1)]"></div>
-                 <div className="w-6 h-1 rounded bg-orange-500 animate-pulse shadow-[0_0_8px_rgba(249,115,22,1)]" style={{animationDelay: '200ms'}}></div>
-                 <div className="w-6 h-1 rounded bg-orange-500 animate-pulse shadow-[0_0_8px_rgba(249,115,22,1)]" style={{animationDelay: '400ms'}}></div>
-             </div>
-
-           </div>
-        </div>
-
-        {/* Pick & Place Collet hovering above or pressing down */}
-        <div className="absolute bottom-[44px] flex flex-col items-center z-20 transition-transform duration-[2000ms] ease-in-out" style={{ transform: `translateY(-${Math.max(0, 100 - pressure * 2)}px)` }}>
-          {/* Suction Collet Tool */}
-          <div className="w-12 h-20 bg-gradient-to-b from-slate-600 to-slate-400 rounded-b-sm border-x border-b border-slate-700 flex justify-center items-end pb-1 shadow-2xl relative">
-             {/* Vacuum Channel Indication */}
-             <div className="w-2 h-full bg-slate-800 absolute opacity-30 shadow-inner"></div>
-             <ArrowDown className={`text-white w-5 h-5 absolute -left-6 bottom-4 opacity-80 block ${pressure < 30 ? 'animate-bounce' : 'opacity-0'}`} />
-          </div>
-          {/* Silicon Die */}
-          <div className="w-32 h-3 bg-gradient-to-b from-slate-200 to-slate-400 shadow-2xl border border-slate-600"></div>
-        </div>
-
-        {/* Dashboard parameters footer */}
-        <div className="w-full absolute bottom-0 bg-slate-950/80 px-4 py-2 border-t border-slate-800 flex justify-between text-[11px] font-mono text-slate-300 z-30">
+          <Callout x={380} y={Math.max(68, dieY - 40)} lx={20} ly={28} anchor="start" dot="#cbd5e1">{t('Pick & Place Collet')}</Callout>
+          <Callout x={452} y={dieY + 10} lx={740} ly={28} anchor="end" dot="#e2e8f0">{t('Silicon Die')}</Callout>
+          <Callout x={380} y={224} lx={20} ly={218} anchor="start" dot="#f87171">{t('Conductive Epoxy')}</Callout>
+          <Callout x={500} y={240} lx={740} ly={218} anchor="end" dot="#f59e0b">{t('Leadframe (Alloy 42)')}</Callout>
+        </svg>
+        <div className="w-full bg-slate-950/80 px-4 py-2 border-t border-slate-800 flex justify-between text-[11px] font-mono text-slate-300">
            <span>{t('Epoxy Vol')}: <span className="text-white font-bold">{(dispense*100).toFixed(0)} μL</span></span>
            <span>{t('Applied Pressure')}: <span className="text-white font-bold">{pressure} gf</span></span>
-           <span>{t('Curing Status')}: <span className="text-amber-400 font-bold">{((time/120)*100).toFixed(0)}%</span></span>
+           <span>{t('Curing Status')}: <span className="text-amber-400 font-bold">{curePct.toFixed(0)}%</span></span>
         </div>
       </CardContent>
     </Card>

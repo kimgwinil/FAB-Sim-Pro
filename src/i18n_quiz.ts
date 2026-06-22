@@ -2,6 +2,8 @@ export const quiz_en: Record<string, string> = {
   "Failure Analysis": "Failure Analysis (FA)",
   "Training Quiz": "Training Quiz",
   "Explanation": "Explanation",
+  "Quiz Scope": "Quiz Scope",
+  "Questions are limited to the currently selected process theory and simulator variables.": "Questions are limited to the currently selected process theory and simulator variables.",
 
   "D_Q1": "[Q1] What is the most significant cause of backside chipping during wafer dicing?",
   "D_Q1_O1": "High coolant flow rate",
@@ -180,6 +182,11 @@ export const quiz_en: Record<string, string> = {
 };
 
 export const quiz_ko: Record<string, string> = {
+  "Training Quiz": "실습 퀴즈",
+  "Explanation": "설명",
+  "Quiz Scope": "출제 범위",
+  "Questions are limited to the currently selected process theory and simulator variables.": "문항은 현재 선택한 공정의 실습 이론과 시뮬레이터 변수 범위 안에서만 출제됩니다.",
+
   "D_Q1": "[Q1] 웨이퍼 다이싱 시 칩핑(Chipping)을 유발하는 가장 큰 원인은?",
   "D_Q1_O1": "높은 냉각수 유량",
   "D_Q1_O2": "과도한 이송 속도",
@@ -357,6 +364,11 @@ export const quiz_ko: Record<string, string> = {
 };
 
 export const quiz_ar: Record<string, string> = {
+  "Training Quiz": "اختبار تدريبي",
+  "Explanation": "الشرح",
+  "Quiz Scope": "نطاق الاختبار",
+  "Questions are limited to the currently selected process theory and simulator variables.": "تقتصر الأسئلة على نظرية العملية المحددة حاليا ومتغيرات المحاكي.",
+
   "D_Q1": "[السؤال 1] ما هو السبب الأكبر لتكسر الحواف الخلفية أثناء تقطيع الرقاقات؟",
   "D_Q1_O1": "ارتفاع تدفق المبرد",
   "D_Q1_O2": "سرعة تغذية مفرطة",

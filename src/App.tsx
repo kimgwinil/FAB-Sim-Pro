@@ -33,12 +33,13 @@ function TopBar() {
 function AppContent() {
   const [activeTab, setActiveTab] = useState('dicing');
   const [activeMode, setActiveMode] = useState<'sim'|'theory'|'fa'|'quiz'>('sim');
+  const [expandedTab, setExpandedTab] = useState('dicing');
   const { language } = useAppContext();
   const isRTL = language === 'ar';
 
   return (
     <div dir={isRTL ? 'rtl' : 'ltr'} className="flex h-screen overflow-hidden bg-slate-50 font-sans">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} activeMode={activeMode} setActiveMode={setActiveMode} />
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} activeMode={activeMode} setActiveMode={setActiveMode} expandedTab={expandedTab} setExpandedTab={setExpandedTab} />
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         <TopBar />
         <div className="flex-1 overflow-y-auto">

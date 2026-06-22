@@ -22,9 +22,11 @@ interface SidebarProps {
   setActiveTab: (id: string) => void;
   activeMode: 'sim'|'theory'|'fa'|'quiz';
   setActiveMode: (mode: 'sim'|'theory'|'fa'|'quiz') => void;
+  expandedTab: string;
+  setExpandedTab: (id: string) => void;
 }
 
-export function Sidebar({ activeTab, setActiveTab, activeMode, setActiveMode }: SidebarProps) {
+export function Sidebar({ activeTab, setActiveTab, activeMode, setActiveMode, expandedTab, setExpandedTab }: SidebarProps) {
   const { t, language } = useTranslation();
   const isRtl = language === 'ar';
 
@@ -40,32 +42,45 @@ export function Sidebar({ activeTab, setActiveTab, activeMode, setActiveMode }: 
             const Icon = tab.icon;
             const isActive = tab.id === activeTab;
             const hasSubMenu = tab.id !== 'dashboard';
+            const isExpanded = tab.id === expandedTab;
             return (
               <li key={tab.id} className="mb-1">
                 <button
                   onClick={() => {
-                    setActiveTab(tab.id);
-                    if (!isActive && hasSubMenu) setActiveMode('theory');
+                    if (!hasSubMenu) {
+                      setActiveTab(tab.id);
+                      setExpandedTab('');
+                      return;
+                    }
+                    if (isExpanded) {
+                      setExpandedTab('');
+                    } else {
+                      setExpandedTab(tab.id);
+                      if (!isActive) {
+                        setActiveTab(tab.id);
+                        setActiveMode('theory');
+                      }
+                    }
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors text-sm font-medium ${
-                    isActive 
-                      ? 'bg-blue-600/10 text-blue-400' 
+                  className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg transition-colors text-sm font-medium text-left ${
+                    isActive
+                      ? 'bg-blue-600/10 text-blue-400'
                       : 'hover:bg-slate-800 hover:text-slate-100'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-blue-400' : 'text-slate-500'}`} />
-                    {t(tab.nameKey)}
+                  <div className="flex items-center gap-3 min-w-0">
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-blue-400' : 'text-slate-500'}`} />
+                    <span className="break-keep text-left">{t(tab.nameKey)}</span>
                   </div>
-                  {hasSubMenu && <ChevronDown className={`w-4 h-4 transition-transform ${isActive ? 'rotate-180 text-blue-400' : 'text-slate-600'}`} />}
+                  {hasSubMenu && <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${isExpanded ? 'rotate-180 text-blue-400' : 'text-slate-600'}`} />}
                 </button>
-                {isActive && hasSubMenu && (
+                {isExpanded && hasSubMenu && (
                   <ul className="mt-1 mb-2 ml-4 pl-4 border-l border-slate-800 space-y-1">
                     {subMenus.map((sub) => (
                       <li key={sub.id}>
                         <button
                           onClick={() => setActiveMode(sub.id)}
-                          className={`w-full flex items-center px-3 py-2 rounded-lg transition-colors text-sm ${
+                          className={`w-full flex items-center px-3 py-2 rounded-lg transition-colors text-sm text-left ${
                             activeMode === sub.id
                               ? 'bg-slate-800 text-white font-medium'
                               : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
@@ -88,4 +103,3 @@ export function Sidebar({ activeTab, setActiveTab, activeMode, setActiveMode }: 
     </div>
   );
 }
-

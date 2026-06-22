@@ -6,13 +6,16 @@ import { useTranslation } from '../i18n';
 import { Layers } from 'lucide-react';
 import { Quiz } from '../components/Quiz';
 import { moldingQuestions } from '../data/quizData';
-import { theoryData } from '../data/theoryData';
+import { getTheoryChapter } from '../data/theoryData';
+import { TheoryView } from '../components/TheoryView';
+import { Callout } from '../components/SvgCallout';
 
 export function Molding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
   const { moldingInputs, setMoldingInputs, setYields } = useAppContext();
   const { t, language } = useTranslation();
 
   const { transferPressure, moldTemp, cureTime, clampForce, preheat } = moldingInputs;
+  const theory = getTheoryChapter('molding', language);
 
   // Calculators
   const viscosity = 50 * Math.exp(3000 / (moldTemp + 273)) * Math.exp(-preheat / 100);
@@ -62,45 +65,17 @@ export function Molding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
         {mode === 'theory' && (
            <Card className="bg-slate-50 border-slate-200 shadow-inner max-w-4xl">
              <CardHeader title={t('Practice Theory')} icon={<Layers className="w-5 h-5 text-blue-600" />} />
-             <CardContent className="space-y-6">
-                <div>
-                  <h4 className="font-semibold text-slate-900 leading-tight mb-3 text-lg border-b pb-2">
-                    {theoryData.molding[language as 'en'|'ko'|'ar']?.title || theoryData.molding.en.title}
-                  </h4>
-                  <div className="prose prose-sm prose-slate text-sm text-slate-700">
-                    {(theoryData.molding[language as 'en'|'ko'|'ar']?.content || theoryData.molding.en.content).split('\n\n').map((paragraph, idx) => (
-                        <p key={idx} className="leading-relaxed mb-3 break-keep">{paragraph}</p>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-200">
-                 <h4 className="font-semibold text-slate-900 mb-4">{t('Key Control Variables')}</h4>
-                 <div className="overflow-x-auto border border-slate-200 rounded-lg bg-white">
-                   <table className="w-full text-sm text-left">
-                     <thead className="bg-slate-100">
-                       <tr><th className="px-4 py-3 border">{t('Variable')}</th><th className="px-4 py-3 border">{t('Impact')}</th></tr>
-                     </thead>
-                     <tbody>
-                       <tr><td className="px-4 py-3 border font-medium">Transfer Pressure</td><td className="px-4 py-3 border">{t('Fill completion')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Mold Temp</td><td className="px-4 py-3 border">{t('Viscosity, Cure speed')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Cure Time</td><td className="px-4 py-3 border">{t('Cure Degree')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Clamping Force</td><td className="px-4 py-3 border">{t('Flash prevention')}</td></tr>
-                     </tbody>
-                   </table>
-                 </div>
-                </div>
+             <CardContent>
+                <TheoryView title={theory.title} content={theory.content} />
              </CardContent>
            </Card>
         )}
 
-        {mode === 'sim' && <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
-          <div className="lg:col-span-8 flex flex-col">
-            <div className="flex-1 min-h-[300px]">
-              <MoldingVisualizer transferPressure={transferPressure} cureDegree={cureDegree} />
-            </div>
+        {mode === 'sim' && <div className="flex flex-col gap-4">
+          <div className="mx-auto w-full max-w-[760px]">
+            <MoldingVisualizer transferPressure={transferPressure} cureDegree={cureDegree} />
           </div>
-          <div className="lg:col-span-4 flex flex-col gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader title={t('Mold Parameters')} />
               <CardContent className="space-y-6">
@@ -165,74 +140,59 @@ export function Molding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
 function MoldingVisualizer({ transferPressure, cureDegree }: { transferPressure: number, cureDegree: number }) {
   const { t } = useTranslation();
   const fillWidth = Math.min(100, transferPressure * 10);
+  const flowX = 230 + fillWidth * 3.0;
   
   return (
     <Card className="bg-[#0f172a] border-slate-700 shadow-2xl relative overflow-hidden">
-      <CardContent className="h-72 relative flex items-center justify-center p-0 flex-col">
-         {/* Engineering Background Grid */}
-         <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none"></div>
+      <CardContent className="p-0">
+         <svg viewBox="0 0 760 300" className="w-full block select-none" style={{ aspectRatio: '760 / 300' }}>
+           <defs>
+             <pattern id="mold-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+               <path d="M20 0H0V20" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+             </pattern>
+             <linearGradient id="mold-steel" x1="0" x2="0" y1="0" y2="1">
+               <stop offset="0%" stopColor="#94a3b8" />
+               <stop offset="100%" stopColor="#334155" />
+             </linearGradient>
+             <linearGradient id="emc-flow" x1="0" x2="1" y1="0" y2="0">
+               <stop offset="0%" stopColor="#475569" />
+               <stop offset="55%" stopColor="#111827" />
+               <stop offset="100%" stopColor="#020617" />
+             </linearGradient>
+           </defs>
+           <rect width="760" height="300" fill="url(#mold-grid)" />
+           <rect x="200" y="72" width="360" height="44" rx="8" fill="url(#mold-steel)" stroke="#cbd5e1" strokeWidth="1.3" />
+           <rect x="200" y="194" width="360" height="44" rx="8" fill="url(#mold-steel)" stroke="#cbd5e1" strokeWidth="1.3" />
+           <rect x="220" y="116" width="320" height="78" fill="#111827" stroke="#64748b" strokeWidth="1.2" />
+           <rect x="160" y="126" width="60" height="58" rx="5" fill="#475569" stroke="#94a3b8" strokeWidth="1.2" />
+           <rect x={164 + fillWidth * 0.32} y="130" width="18" height="50" fill="#0f172a" stroke="#cbd5e1" strokeWidth="1" />
+           <path d="M220 154 H540" stroke="#92400e" strokeWidth="5" strokeLinecap="round" />
+           {[268, 348, 428, 508].map((x, i) => (
+             <g key={x}>
+               <rect x={x - 25} y="137" width="50" height="26" rx="3" fill="#475569" stroke="#cbd5e1" strokeWidth="0.9" />
+               <path d={`M${x - 18} 154 C${x - 18} 126 ${x + 18} 126 ${x + 18} 154`} fill="none" stroke="#facc15" strokeWidth="1.4" opacity="0.9" />
+               <text x={x} y="178" fill="#94a3b8" fontSize="9" textAnchor="middle">C{i + 1}</text>
+             </g>
+           ))}
+           <clipPath id="mold-cavity-clip">
+             <rect x="220" y="116" width="320" height="78" />
+           </clipPath>
+           <g clipPath="url(#mold-cavity-clip)">
+             <rect x="220" y="116" width={Math.min(320, fillWidth * 3.2)} height="78" fill="url(#emc-flow)" opacity="0.82" />
+             <ellipse cx={flowX} cy="155" rx="18" ry="45" fill="#64748b" opacity="0.32">
+               <animate attributeName="opacity" values="0.18;0.42;0.18" dur="1.2s" repeatCount="indefinite" />
+             </ellipse>
+           </g>
+           <line x1={Math.min(540, flowX)} y1="118" x2={Math.min(540, flowX)} y2="192" stroke="#94a3b8" strokeWidth="2" strokeDasharray="5 5" opacity="0.8" />
+           <path d="M190 155 H220" stroke="#020617" strokeWidth="16" strokeLinecap="round" />
+           <path d="M190 155 H220" stroke="#64748b" strokeWidth="4" strokeLinecap="round" />
 
-         {/* --- Labels (Positioned at edges with pointers contextually) --- */}
-         <div className="absolute top-2 left-6 z-20 flex flex-col gap-1 items-start">
-            <div className="text-white text-[10px] bg-slate-800/80 px-2 py-1 rounded border border-slate-600 backdrop-blur-sm flex items-center gap-2">
-               <div className="w-2 h-2 rounded-sm bg-slate-400"></div>{t('Steel Mold Chase')}
-            </div>
-         </div>
-
-         <div className="absolute top-2 right-6 z-20 flex flex-col gap-1 items-end">
-            <div className="text-[10px] text-amber-200 bg-slate-800/80 px-2 py-1 rounded border border-amber-700/50 backdrop-blur-sm flex items-center gap-2">
-               {t('EMC Flow Front')}<div className="w-2 h-2 rounded-full bg-slate-700 animate-pulse"></div>
-            </div>
-         </div>
-
-
-         {/* --- Central Mold Component --- */}
-         <div className="relative w-[400px] h-[160px] z-10 flex flex-col items-center justify-center mt-4">
-            
-            {/* Top Mold Half */}
-            <div className="absolute top-0 w-full h-10 bg-gradient-to-b from-slate-600 to-slate-700 border-x-2 border-t-2 border-slate-500 rounded-t-lg z-20 shadow-[0_10px_20px_rgba(0,0,0,0.5)]"></div>
-
-            {/* Cavity & Flow Overlay (Between molds) */}
-            <div className="absolute w-[360px] h-[60px] border border-slate-500 flex overflow-hidden bg-slate-800/80 top-10 z-30 shadow-inner">
-               
-               {/* Leadframe inside Cavity */}
-               <div className="absolute w-full h-1 bg-gradient-to-r from-amber-700 to-amber-900 bottom-2"></div>
-               {/* Die on Leadframe */}
-               <div className="absolute w-24 h-6 bg-gradient-to-b from-slate-400 to-slate-500 bottom-3 right-20 rounded-sm border border-slate-600 shadow-md"></div>
-               
-               {/* Gold Wires */}
-               <svg className="absolute w-full h-full bottom-3 z-10">
-                 <path d="M 230 40 C 230 10 280 15 285 45" fill="none" stroke="gold" strokeWidth="1.5" filter="drop-shadow(0px 2px 2px rgba(0,0,0,0.8))" />
-                 <path d="M 240 40 C 240 5 295 10 300 45" fill="none" stroke="gold" strokeWidth="1.5" filter="drop-shadow(0px 2px 2px rgba(0,0,0,0.8))" />
-               </svg>
-
-               {/* Black Epoxy Molding Compound Flow */}
-               <div className="absolute h-full z-20 transition-all duration-700 ease-out flex items-center justify-end" 
-                    style={{ 
-                         width: `${fillWidth}%`, 
-                         background: `linear-gradient(to right, #1e293b, #0f172a, #020617)`,
-                         borderRight: '1px solid #334155'
-                    }}>
-                  <div className="w-12 h-full bg-slate-600 blur-xl mix-blend-screen opacity-20"></div>
-                  {/* Flow front turbulence */}
-                  <div className="absolute right-0 h-full w-4 bg-slate-800 animate-pulse mix-blend-overlay"></div>
-               </div>
-            </div>
-
-            {/* Bottom Mold Half */}
-            <div className="absolute bottom-6 w-full h-10 bg-gradient-to-t from-slate-600 to-slate-700 border-x-2 border-b-2 border-slate-500 rounded-b-lg z-20 shadow-[0_-10px_20px_rgba(0,0,0,0.5)]"></div>
-            
-            {/* Plunger/Gate area (Left connecting) */}
-            <div className="absolute left-[-20px] top-[40px] w-8 h-[60px] bg-gradient-to-r from-slate-500 to-slate-700 border-y-2 border-l-2 border-slate-400 rounded-l-md z-10 shadow-xl overflow-hidden">
-               {/* Piston pushing */}
-               <div className="absolute w-full h-full bg-slate-800 transition-transform duration-700 ease-out border-r-2 border-slate-400"
-                    style={{ transform: `translateX(${-100 + fillWidth}%)` }}></div>
-            </div>
-         </div>
-
-
-         {/* Dashboard parameters */}
-         <div className={`absolute w-full bottom-0 left-0 right-0 flex justify-between text-[11px] font-mono text-slate-300 bg-slate-950/80 px-4 py-2 border-t border-slate-800 z-40`}>
+           <Callout x={380} y={88} lx={20} ly={28} anchor="start" dot="#cbd5e1">{t('Steel Mold Chase')}</Callout>
+           <Callout x={Math.min(540, flowX)} y={155} lx={740} ly={28} anchor="end" dot="#94a3b8">{t('EMC Flow Front')}</Callout>
+           <Callout x={190} y={155} lx={20} ly={220} anchor="start" dot="#64748b">{t('Plunger Gate')}</Callout>
+           <Callout x={428} y={154} lx={740} ly={220} anchor="end" dot="#f59e0b">{t('Leadframe and Dies')}</Callout>
+         </svg>
+         <div className={`w-full flex justify-between text-[11px] font-mono text-slate-300 bg-slate-950/80 px-4 py-2 border-t border-slate-800`}>
             <span>{t('Transfer Pressure')}: <span className="text-white font-bold">{transferPressure} MPa</span></span>
             <span>{t('Fill status')}: <span className="text-white font-bold">{fillWidth.toFixed(0)}%</span></span>
             <span className={cureDegree > 80 ? "text-green-400 font-bold" : "text-amber-400 font-bold"}>

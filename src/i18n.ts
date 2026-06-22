@@ -24,6 +24,7 @@ const dict_ko: Record<string, string> = {
   // Tabs
   "Simulator": "시뮬레이터",
   "Theory": "이론적 배경",
+  "Failure Analysis": "불량 분석(FA)",
   "Defect Scenarios": "불량 시나리오",
   "Failure Modes": "불량 모드 분석(FA)",
   "Training Quiz": "실습 퀴즈",
@@ -49,6 +50,14 @@ const dict_ko: Record<string, string> = {
   "Cutting Temperature": "절삭 온도",
   "Die Yield Prediction": "다이 수율 예측",
   "Process Verdict": "공정 판정 결과",
+  "Coolant Nozzle": "냉각수 노즐",
+  "Spindle Arbor": "스핀들 축",
+  "Diamond Blade": "다이아몬드 블레이드",
+  "Cutting Kerf": "절단 커프",
+  "Silicon Wafer": "실리콘 웨이퍼",
+  "Scribe Lines": "스크라이브 라인",
+  "Dicing Tape": "다이싱 테이프",
+  "Chuck Table": "척 테이블",
   "PASS": "합격",
   "WARNING": "주의",
   "FAIL": "불량",
@@ -68,6 +77,13 @@ const dict_ko: Record<string, string> = {
   "Thermal Resistance (R_th)": "영 저항 (R_th)",
   "Shear Strength": "전단 강도",
   "Calculated Yield": "예측 수율",
+  "Pick & Place Collet": "픽앤플레이스 콜렛",
+  "Silicon Die": "실리콘 다이",
+  "Conductive Epoxy": "전도성 에폭시",
+  "Leadframe (Alloy 42)": "리드프레임 (Alloy 42)",
+  "Epoxy Vol": "에폭시량",
+  "Applied Pressure": "가압 압력",
+  "Curing Status": "경화 상태",
 
   // Wire Bonding
   "Wire Bonding Simulator": "와이어 본딩 시뮬레이터",
@@ -94,6 +110,7 @@ const dict_ko: Record<string, string> = {
   "Ceramic Capillary": "세라믹 캐필러리",
   "Al Pad (FAB)": "알루미늄 패드 (FAB)",
   "Stitch Wedge Bond": "스티치 웨지 본드",
+  "SAG FAIL": "처짐 불량",
   "Failure Analysis & DOE": "불량 분석 및 실험계획법(DOE)",
   "EMC encapsulation process (Silica 85wt%, 4-cavity QFP).": "EMC 봉지 공정 (실리카 85wt%, 4-Cavity QFP)",
   "Mold Parameters": "성형 파라미터 제어",
@@ -111,6 +128,10 @@ const dict_ko: Record<string, string> = {
   "FLASH OCCURRED": "플래시 발생",
   "SAFE": "안전",
   "Molding Yield": "몰딩 합격률",
+  "EMC Flow Front": "EMC 유동 전면",
+  "Plunger Gate": "플런저 게이트",
+  "Leadframe and Dies": "리드프레임 및 다이",
+  "Fill status": "충전 상태",
 
   // Test
   "Inspection & Test Simulator": "최종 검사 및 테스트 시뮬레이터",
@@ -122,6 +143,10 @@ const dict_ko: Record<string, string> = {
   "Burn-in Time (Hours)": "번인 테스트 시간 (Hours)",
   "Output Report": "테스트 결과 리포트",
   "= Final Yield": "= 최종 수율",
+  "DUT": "DUT (피검사 칩)",
+  "GOOD BATCH": "양호 배치",
+  "MARGINAL": "경계",
+  "CRITICAL FAIL": "중대 불량",
 
   // WaferDicing
   "Process is within optimal operating limits.": "공정이 최적의 작동 범위 내에 있습니다.",
@@ -166,7 +191,6 @@ const dict_ko: Record<string, string> = {
   "Root Cause": "근본 원인",
   "Solution": "해결책",
   "Explanation": "설명(해설)",
-  "Training Quiz": "실습 퀴즈",
   "Epoxy Curing (Arrhenius Model)": "에폭시 경화 반응 (Arrhenius 모델)",
   "Reaction rate": "반응속도 상수",
   "Cure Degree": "경화도",
@@ -299,6 +323,7 @@ const dict_ar: Record<string, string> = {
   // Tabs
   "Simulator": "المحاكي",
   "Theory": "النظرية",
+  "Failure Analysis": "تحليل الأعطال",
   "Defect Scenarios": "سيناريوهات العيوب",
   "Failure Modes": "أوضاع الفشل",
   "Training Quiz": "اختبار التدريب",
@@ -324,6 +349,14 @@ const dict_ar: Record<string, string> = {
   "Cutting Temperature": "درجة حرارة القطع",
   "Die Yield Prediction": "توقع عائد القالب",
   "Process Verdict": "حكم العملية",
+  "Coolant Nozzle": "فوهة المبرد",
+  "Spindle Arbor": "محور الدوران",
+  "Diamond Blade": "شفرة ماسية",
+  "Cutting Kerf": "مسار القطع",
+  "Silicon Wafer": "رقاقة سيليكون",
+  "Scribe Lines": "خطوط الفصل",
+  "Dicing Tape": "شريط التقطيع",
+  "Chuck Table": "طاولة التثبيت",
   "PASS": "ناجح",
   "WARNING": "تحذير",
   "FAIL": "فاشل",
@@ -343,6 +376,13 @@ const dict_ar: Record<string, string> = {
   "Thermal Resistance (R_th)": "المقاومة الحرارية",
   "Shear Strength": "قوة القص",
   "Calculated Yield": "العائد المحسوب",
+  "Pick & Place Collet": "ملتقط وواضع",
+  "Silicon Die": "قالب سيليكون",
+  "Conductive Epoxy": "إيبوكسي موصل",
+  "Leadframe (Alloy 42)": "إطار الرصاص (Alloy 42)",
+  "Epoxy Vol": "حجم الإيبوكسي",
+  "Applied Pressure": "ضغط مطبق",
+  "Curing Status": "حالة المعالجة",
 
   // Wire Bonding
   "Wire Bonding Simulator": "محاكي ربط الأسلاك",
@@ -359,6 +399,7 @@ const dict_ar: Record<string, string> = {
   "Loop Sag Risk": "خطر ترهل الحلقة",
   "Ball Shear Strength": "قوة قص الكرة",
   "Rolling WB Yield": "عائد ربط الأسلاك",
+  "SAG FAIL": "فشل الترهل",
 
   // Molding
   "Transfer Molding": "قولبة النقل",
@@ -378,6 +419,10 @@ const dict_ar: Record<string, string> = {
   "FLASH OCCURRED": "حدث وميض",
   "SAFE": "آمن",
   "Molding Yield": "عائد القولبة",
+  "EMC Flow Front": "جبهة تدفق EMC",
+  "Plunger Gate": "بوابة المكبس",
+  "Leadframe and Dies": "إطار الرصاص والقوالب",
+  "Fill status": "حالة الملء",
 
   // Test
   "Inspection & Test Simulator": "محاكي الفحص والاختبار",
@@ -389,6 +434,10 @@ const dict_ar: Record<string, string> = {
   "Burn-in Time (Hours)": "وقت الاحتراق (ساعات)",
   "Output Report": "تقرير المخرجات",
   "= Final Yield": "النتيجة النهائية =",
+  "DUT": "الجهاز قيد الاختبار",
+  "GOOD BATCH": "دفعة جيدة",
+  "MARGINAL": "هامشي",
+  "CRITICAL FAIL": "فشل حرج",
 
   // WaferDicing
   "Process is within optimal operating limits.": "العملية ضمن حدود التشغيل المثلى.",

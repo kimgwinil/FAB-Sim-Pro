@@ -6,13 +6,16 @@ import { Layers } from 'lucide-react';
 import { useTranslation } from '../i18n';
 import { Quiz } from '../components/Quiz';
 import { testQuestions } from '../data/quizData';
-import { theoryData } from '../data/theoryData';
+import { getTheoryChapter } from '../data/theoryData';
+import { TheoryView } from '../components/TheoryView';
+import { Callout } from '../components/SvgCallout';
 
 export function TestInspection({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
   const { testInputs, setTestInputs, yields, setYields } = useAppContext();
   const { t, language } = useTranslation();
 
   const { testTemp, voltVariation, burninTemp, burninTime } = testInputs;
+  const theory = getTheoryChapter('test', language);
 
   // Visual Inspection
   const dicingDefRate = (100 - yields.dicing) / 100;
@@ -78,45 +81,17 @@ MTBF (Hours)    : ${mtbf.toLocaleString(undefined, {maximumFractionDigits: 0})} 
         {mode === 'theory' && (
            <Card className="bg-slate-50 border-slate-200 shadow-inner max-w-4xl">
              <CardHeader title={t('Practice Theory')} icon={<Layers className="w-5 h-5 text-blue-600" />} />
-             <CardContent className="space-y-6">
-                <div>
-                  <h4 className="font-semibold text-slate-900 leading-tight mb-3 text-lg border-b pb-2">
-                    {theoryData.test[language as 'en'|'ko'|'ar']?.title || theoryData.test.en.title}
-                  </h4>
-                  <div className="prose prose-sm prose-slate text-sm text-slate-700">
-                    {(theoryData.test[language as 'en'|'ko'|'ar']?.content || theoryData.test.en.content).split('\n\n').map((paragraph, idx) => (
-                        <p key={idx} className="leading-relaxed mb-3 break-keep">{paragraph}</p>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-200">
-                 <h4 className="font-semibold text-slate-900 mb-4">{t('Key Control Variables')}</h4>
-                 <div className="overflow-x-auto border border-slate-200 rounded-lg bg-white">
-                   <table className="w-full text-sm text-left">
-                     <thead className="bg-slate-100">
-                       <tr><th className="px-4 py-3 border">{t('Variable')}</th><th className="px-4 py-3 border">{t('Impact')}</th></tr>
-                     </thead>
-                     <tbody>
-                       <tr><td className="px-4 py-3 border font-medium">Test Temp</td><td className="px-4 py-3 border">{t('Marginality screening')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Voltage Fluctuation</td><td className="px-4 py-3 border">{t('Parametric boundaries')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Burn-in Temp</td><td className="px-4 py-3 border">{t('Activation energy limit')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Burn-in Time</td><td className="px-4 py-3 border">{t('Infant mortality removal')}</td></tr>
-                     </tbody>
-                   </table>
-                 </div>
-                </div>
+             <CardContent>
+                <TheoryView title={theory.title} content={theory.content} />
              </CardContent>
            </Card>
         )}
 
-        {mode === 'sim' && <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
-          <div className="lg:col-span-8 flex flex-col">
-            <div className="flex-1 min-h-[300px]">
-              <TestVisualizer testTemp={testTemp} testYield={testYield} successProb={successProb} />
-            </div>
+        {mode === 'sim' && <div className="flex flex-col gap-4">
+          <div className="mx-auto w-full max-w-[760px]">
+            <TestVisualizer testTemp={testTemp} testYield={testYield} successProb={successProb} />
           </div>
-          <div className="lg:col-span-4 flex flex-col gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader title={t('Test Environment Setup')} />
               <CardContent className="space-y-6">
@@ -183,87 +158,57 @@ function TestVisualizer({ testTemp, testYield, successProb }: { testTemp: number
    const isHot = testTemp > 50;
    const isCold = testTemp < 0;
    const { t } = useTranslation();
+   const envColor = isHot ? '#ef4444' : isCold ? '#38bdf8' : '#22c55e';
+   const headY = successProb > 0.9 ? 56 : 64;
 
    return (
     <Card className={`border-slate-700 transition-colors duration-1000 shadow-2xl relative overflow-hidden ${isHot ? 'bg-red-950' : isCold ? 'bg-blue-950' : 'bg-[#0f172a]'}`}>
-      <CardContent className="h-72 relative flex items-center justify-center p-0 flex-col">
-         {/* Engineering Background Grid */}
-         <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none"></div>
+      <CardContent className="p-0">
+         <svg viewBox="0 0 760 300" className="w-full block select-none" style={{ aspectRatio: '760 / 300' }}>
+           <defs>
+             <pattern id="test-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+               <path d="M20 0H0V20" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+             </pattern>
+             <linearGradient id="pcb" x1="0" x2="1" y1="0" y2="0">
+               <stop offset="0%" stopColor="#065f46" />
+               <stop offset="100%" stopColor="#064e3b" />
+             </linearGradient>
+           </defs>
+           <rect width="760" height="300" fill="url(#test-grid)" />
+           <rect width="760" height="300" fill={envColor} opacity={isHot || isCold ? 0.08 : 0.02} />
+           <rect x="260" y={headY} width="240" height="58" rx="7" fill="#334155" stroke="#94a3b8" strokeWidth="1.3" />
+           <rect x="282" y={headY + 12} width="196" height="12" rx="3" fill="#64748b" opacity="0.6" />
+           {Array.from({ length: 10 }).map((_, i) => {
+             const x = 292 + i * 19;
+             return <rect key={x} x={x} y={headY + 52} width="5" height="46" rx="2" fill="#facc15" stroke="#fef08a" strokeWidth="0.8" />;
+           })}
+           <rect x="278" y="176" width="204" height="26" rx="4" fill="#020617" stroke="#64748b" strokeWidth="1.2" />
+           <circle cx="300" cy="189" r="6" fill={successProb > 0.9 ? '#22c55e' : '#ef4444'}>
+             {successProb <= 0.9 && <animate attributeName="opacity" values="0.4;1;0.4" dur="0.8s" repeatCount="indefinite" />}
+           </circle>
+           <text x="380" y="193" fill="#94a3b8" fontSize="11" fontFamily="monospace" textAnchor="middle">DUT-1042</text>
+           <rect x="220" y="202" width="320" height="48" rx="5" fill="url(#pcb)" stroke="#34d399" strokeWidth="1.1" />
+           <rect x="312" y="212" width="136" height="22" rx="4" fill="#052e2b" stroke="#10b981" strokeWidth="0.8" />
+           {[334, 358, 382, 406, 430].map((x, i) => (
+             <circle key={x} cx={x} cy="223" r="4" fill={i === 3 && successProb <= 0.9 ? '#ef4444' : '#34d399'} opacity="0.9" />
+           ))}
+           {(isHot || isCold) && [250, 330, 410, 490].map((x) => (
+             <rect key={x} x={x} y="238" width="42" height="5" rx="2" fill={envColor} opacity="0.75" />
+           ))}
 
-         {/* Overlay Effects for harsh environment */}
-         {isHot && <div className="absolute inset-0 bg-red-600/10 pointer-events-none mix-blend-overlay animate-pulse"></div>}
-         {isCold && <div className="absolute inset-0 bg-blue-400/10 pointer-events-none mix-blend-overlay"></div>}
-
-         {/* --- Labels (Positioned at edges) --- */}
-         <div className="absolute top-4 right-4 z-20 flex flex-col gap-1 items-end">
-            <div className="text-white text-[10px] bg-slate-800/80 px-2 py-1 rounded border border-slate-600 backdrop-blur-sm flex items-center gap-2">
-               {t('ATE Tester Head')}<div className="w-2 h-2 rounded-sm bg-slate-400"></div>
-            </div>
-            <div className="text-[10px] text-yellow-200 bg-slate-800/80 px-2 py-1 rounded border border-yellow-700/50 backdrop-blur-sm flex items-center gap-2 mt-2">
-               {t('Probe Pins (Pogo)')}<div className="w-2 h-2 rounded-full bg-yellow-400"></div>
-            </div>
+           <Callout x={382} y={headY + 8} lx={20} ly={28} anchor="start" dot="#cbd5e1">{t('ATE Tester Head')}</Callout>
+           <Callout x={382} y={headY + 84} lx={740} ly={28} anchor="end" dot="#fde047">{t('Probe Pins (Pogo)')}</Callout>
+           <Callout x={388} y={188} lx={740} ly={220} anchor="end" dot="#94a3b8">{t('DUT')}</Callout>
+           <Callout x={455} y={228} lx={20} ly={220} anchor="start" dot="#34d399">{t('Test Socket PCB')}</Callout>
+         </svg>
+         <div className="w-full bg-slate-950/90 px-4 py-2 border-t border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-2 text-[11px] font-mono text-slate-300">
+            <span>ATE OS: <span className="text-green-400 font-bold">TESTING</span></span>
+            <span>ENV_TEMP: <span className="text-white font-bold">{testTemp}°C</span></span>
+            <span>EST_YIELD: <span className="text-white font-bold">{testYield.toFixed(1)}%</span></span>
+            <span>VERDICT: <span className={successProb > 0.9 ? "text-green-400 font-bold" : successProb > 0.8 ? "text-amber-400 font-bold" : "text-red-400 font-bold"}>
+              {successProb > 0.9 ? t('GOOD BATCH') : successProb > 0.8 ? t('MARGINAL') : t('CRITICAL FAIL')}
+            </span></span>
          </div>
-
-         <div className="absolute top-4 left-4 z-20 flex flex-col gap-1 items-start">
-            <div className="text-[10px] text-emerald-200 bg-slate-800/80 px-2 py-1 rounded border border-emerald-700/50 backdrop-blur-sm flex items-center gap-2">
-               <div className="w-2 h-2 rounded-sm bg-emerald-700"></div>{t('Test Socket PCB')}
-            </div>
-         </div>
-
-
-         {/* --- Animated Simulator Elements --- */}
-         <div className="relative w-full h-[200px] z-10 flex flex-col items-center justify-center mt-6">
-            
-            {/* Tester Head moving up and down */}
-            <div className="absolute top-0 w-64 h-16 bg-gradient-to-b from-slate-600 to-slate-800 border-x-2 border-t-2 border-slate-500 rounded-t-lg z-20 flex justify-center items-end shadow-2xl animate-[bounce_2s_infinite]">
-               {/* Pogo Pins */}
-               <div className="flex gap-4 mb-[-12px]">
-                 {[1,2,3,4,5,6,7,8].map(i => <div key={i} className="w-1.5 h-8 bg-yellow-400 rounded-b-sm shadow-[0_0_8px_rgba(250,204,21,0.6)]"></div>)}
-               </div>
-            </div>
-
-            {/* Device Under Test (DUT) */}
-            <div className="absolute top-[80px] w-48 h-6 bg-slate-900 border border-slate-700 rounded-sm z-10 flex justify-between items-center px-4 shadow-[0_0_15px_black]">
-                {/* Visual Pass/Fail indicator on DUT */}
-                <div className={`w-3 h-3 rounded-full ${successProb > 0.9 ? 'bg-green-500 shadow-[0_0_10px_#22c55e]' : 'bg-red-500 shadow-[0_0_10px_#ef4444] animate-pulse'}`}></div>
-                <div className="text-slate-500 font-mono text-[8px]">DUT-1042</div>
-            </div>
-
-            {/* Socket Board */}
-            <div className="absolute top-[86px] w-80 h-12 bg-gradient-to-r from-emerald-800 to-emerald-900 border-y-2 border-emerald-700 z-0 flex justify-center items-end pb-2 shadow-xl">
-               <div className="w-32 h-6 bg-black/80 rounded flex justify-around items-center px-2 border border-slate-700 shadow-inner">
-                 <div className="w-3 h-3 rounded-sm bg-emerald-400 animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.8)]"></div>
-                 <div className="w-3 h-3 rounded-sm bg-emerald-600"></div>
-                 <div className="w-3 h-3 rounded-sm bg-red-500 animate-[bounce_1s_infinite] shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div>
-               </div>
-               
-               {/* Heating/Cooling elements in the chuck */}
-               {(isHot || isCold) && (
-                 <div className="absolute inset-x-0 bottom-0 h-1/2 flex justify-around px-8 opacity-50">
-                    {[1,2,3,4].map(i => (
-                       <div key={i} className={`w-8 h-2 rounded ${isHot ? 'bg-red-500 blur-sm animate-pulse' : 'bg-blue-400 blur-sm'}`}></div>
-                    ))}
-                 </div>
-               )}
-            </div>
-
-         </div>
-
-         {/* Internal Monitor Screen overlay */}
-         <div className="absolute bottom-4 left-4 w-64 h-32 bg-black/90 border border-slate-700 rounded-lg p-3 font-mono text-[11px] text-green-400 flex flex-col justify-center shadow-2xl backdrop-blur-md z-30">
-            <div className="border-b border-green-900/50 pb-1 mb-1 font-bold text-green-300">ATE SYSTEM OS V9.2</div>
-            <div>[STATUS] TESTING_IN_PROGRESS</div>
-            <div className="mt-1">ENV_TEMP : {testTemp}°C</div>
-            <div>EST_YIELD: <span className="text-white">{(testYield).toFixed(1)}%</span></div>
-            <div>PROB_PASS: {(successProb * 100).toFixed(1)}%</div>
-            <div className="mt-2 text-xs font-bold bg-slate-900 rounded p-1 text-center border border-slate-800 flex justify-center items-center gap-2 text-white">
-              VERDICT: 
-              {successProb > 0.9 ? <span className="text-green-500">GOOD BATCH</span> :
-               successProb > 0.8 ? <span className="text-amber-500">MARGINAL</span> :
-               <span className="text-red-500 animate-[pulse_0.5s_infinite]">CRITICAL FAIL</span>}
-            </div>
-         </div>
-
       </CardContent>
     </Card>
    );

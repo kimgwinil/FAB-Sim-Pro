@@ -6,13 +6,16 @@ import { useTranslation } from '../i18n';
 import { Disc3 } from 'lucide-react';
 import { Quiz } from '../components/Quiz';
 import { wireQuestions } from '../data/quizData';
-import { theoryData } from '../data/theoryData';
+import { getTheoryChapter } from '../data/theoryData';
+import { TheoryView } from '../components/TheoryView';
+import { Callout } from '../components/SvgCallout';
 
 export function WireBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
   const { wireInputs, setWireInputs, setYields } = useAppContext();
   const { t, language } = useTranslation();
 
   const { power, temp, force, loopHeight, length } = wireInputs;
+  const theory = getTheoryChapter('wireBonding', language);
 
   // Calculators
   const initialBall = 25 * 2.5; // 62.5 um
@@ -77,45 +80,17 @@ export function WireBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
         {mode === 'theory' && (
            <Card className="bg-slate-50 border-slate-200 shadow-inner max-w-4xl">
              <CardHeader title={t('Practice Theory')} icon={<Disc3 className="w-5 h-5 text-blue-600" />} />
-             <CardContent className="space-y-6">
-                <div>
-                  <h4 className="font-semibold text-slate-900 leading-tight mb-3 text-lg border-b pb-2">
-                    {theoryData.wireBonding[language as 'en'|'ko'|'ar']?.title || theoryData.wireBonding.en.title}
-                  </h4>
-                  <div className="prose prose-sm prose-slate text-sm text-slate-700">
-                    {(theoryData.wireBonding[language as 'en'|'ko'|'ar']?.content || theoryData.wireBonding.en.content).split('\n\n').map((paragraph, idx) => (
-                        <p key={idx} className="leading-relaxed mb-3 break-keep">{paragraph}</p>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-200">
-                 <h4 className="font-semibold text-slate-900 mb-4">{t('Key Control Variables')}</h4>
-                 <div className="overflow-x-auto border border-slate-200 rounded-lg bg-white">
-                   <table className="w-full text-sm text-left">
-                     <thead className="bg-slate-100">
-                       <tr><th className="px-4 py-3 border">{t('Variable')}</th><th className="px-4 py-3 border">{t('Impact')}</th></tr>
-                     </thead>
-                     <tbody>
-                       <tr><td className="px-4 py-3 border font-medium">US Power</td><td className="px-4 py-3 border">{t('Deformation, friction heat')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Temp</td><td className="px-4 py-3 border">{t('Atomic diffusion, IMC')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Force</td><td className="px-4 py-3 border">{t('Weld area, oxide cracking')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Loop Height</td><td className="px-4 py-3 border">{t('Wire sway, sag risk')}</td></tr>
-                     </tbody>
-                   </table>
-                 </div>
-                </div>
+             <CardContent>
+                <TheoryView title={theory.title} content={theory.content} />
              </CardContent>
            </Card>
         )}
 
-        {mode === 'sim' && <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
-          <div className="lg:col-span-8 flex flex-col">
-            <div className="flex-1 min-h-[300px]">
-              <WireVisualizer loopHeight={loopHeight} length={length} isValidLoop={isValidLoop} />
-            </div>
+        {mode === 'sim' && <div className="flex flex-col gap-4">
+          <div className="mx-auto w-full max-w-[760px]">
+            <WireVisualizer loopHeight={loopHeight} length={length} isValidLoop={isValidLoop} />
           </div>
-          <div className="lg:col-span-4 flex flex-col gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader title={t('Ultrasonic & Thermal Params')} />
               <CardContent className="space-y-6">
@@ -174,89 +149,47 @@ export function WireBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
 function WireVisualizer({ loopHeight, length, isValidLoop }: { loopHeight: number, length: number, isValidLoop: boolean }) {
   const { t, language } = useTranslation();
   const isRtl = language === 'ar';
+  const endX = Math.min(548, 430 + length / 24);
+  const controlY = Math.max(74, 218 - loopHeight / 1.55);
   
   return (
     <Card className="bg-[#0f172a] border-slate-700 shadow-2xl relative overflow-hidden">
-      <CardContent className="h-72 relative flex items-center justify-center p-0 flex-col">
-         {/* Engineering Background Grid */}
-         <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none"></div>
+      <CardContent className="p-0">
+         <svg viewBox="0 0 760 300" className="w-full block select-none" style={{ aspectRatio: '760 / 300' }}>
+           <defs>
+             <pattern id="wire-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+               <path d="M20 0H0V20" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+             </pattern>
+             <linearGradient id="wire-gold" x1="0%" y1="100%" x2="100%" y2="0%">
+               <stop offset="0%" stopColor="#f59e0b" />
+               <stop offset="35%" stopColor="#fef08a" />
+               <stop offset="72%" stopColor="#eab308" />
+               <stop offset="100%" stopColor="#92400e" />
+             </linearGradient>
+             <linearGradient id="capillary-ceramic" x1="0" x2="0" y1="0" y2="1">
+               <stop offset="0%" stopColor="#f8fafc" />
+               <stop offset="100%" stopColor="#94a3b8" />
+             </linearGradient>
+           </defs>
+           <rect width="760" height="300" fill="url(#wire-grid)" />
+           <rect x="206" y="222" width="146" height="28" rx="3" fill="#475569" stroke="#94a3b8" strokeWidth="1.2" />
+           <rect x="244" y="214" width="64" height="10" rx="2" fill="#7dd3fc" stroke="#bae6fd" strokeWidth="1" />
+           <ellipse cx="276" cy="210" rx="22" ry="10" fill="url(#wire-gold)" stroke="#fef3c7" strokeWidth="1.2" />
+           <rect x="476" y="224" width="168" height="26" rx="3" fill="#78350f" stroke="#f59e0b" strokeWidth="1.2" />
+           <rect x="502" y="216" width="78" height="8" rx="4" fill="#ca8a04" />
+           <path d={`M276 208 C304 ${controlY}, 386 ${controlY - 6}, ${endX} 218`} fill="none" stroke="url(#wire-gold)" strokeWidth="5" strokeLinecap="round" filter="drop-shadow(0 8px 6px rgba(0,0,0,0.55))" opacity={isValidLoop ? 1 : 0.35} />
+           {!isValidLoop && <path d={`M276 208 Q390 252 ${endX} 218`} fill="none" stroke="#ef4444" strokeWidth="3" strokeDasharray="7 6" />}
+           <path d={`M${endX - 22} 218 L${endX + 30} 214`} stroke="url(#wire-gold)" strokeWidth="6" strokeLinecap="round" />
+           <path d="M518 72 L548 72 L540 164 L526 198 L512 164 Z" fill="url(#capillary-ceramic)" stroke="#cbd5e1" strokeWidth="1.4" opacity="0.9" />
+           <circle cx="526" cy="198" r="5" fill="#fef08a" stroke="#92400e" strokeWidth="1" />
+           <line x1="526" y1="198" x2={endX} y2="218" stroke="#fef08a" strokeWidth="2.2" strokeLinecap="round" />
 
-         {/* --- Labels (Positioned at edges) --- */}
-         <div className="absolute top-4 left-4 z-10 flex flex-col gap-1 items-start">
-            <div className="text-white text-[10px] bg-slate-800/80 px-2 py-1 rounded border border-slate-600 backdrop-blur-sm flex items-center gap-2">
-               <div className="w-2 h-2 rounded-sm bg-slate-300"></div>{t('Ceramic Capillary')}
-            </div>
-            <div className="text-[10px] text-yellow-200 bg-slate-800/80 px-2 py-1 rounded border border-yellow-700/50 backdrop-blur-sm flex items-center gap-2 mt-2">
-               <div className="w-2 h-2 rounded-full bg-yellow-400"></div>{t('Gold Wire (25μm)')}
-            </div>
-         </div>
-
-         <div className="absolute top-4 right-4 z-10 flex flex-col gap-1 items-end">
-            <div className="text-[10px] text-blue-200 bg-slate-800/80 px-2 py-1 rounded border border-blue-700/50 backdrop-blur-sm flex items-center gap-2">
-               {t('Al Pad (FAB)')}<div className="w-2 h-2 rounded-sm bg-sky-300"></div>
-            </div>
-            <div className="text-[10px] text-amber-200 bg-slate-800/80 px-2 py-1 rounded border border-amber-700/50 backdrop-blur-sm flex items-center gap-2 mt-2">
-               {t('Stitch Wedge Bond')}<div className="w-4 h-1 rounded-sm bg-yellow-500"></div>
-            </div>
-         </div>
-
-         {/* Visual Loop structure using SVG */}
-         <div className="absolute inset-x-0 bottom-[60px] flex justify-center z-10 w-full">
-            {/* Pad Area (Silicon Die side) */}
-            <div className="w-32 h-6 bg-gradient-to-b from-slate-400 to-slate-500 absolute bottom-0 -ml-[220px] flex justify-end flex-col items-center rounded-sm border-t border-slate-300 shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
-              {/* Aluminum Pad */}
-              <div className="w-16 h-3 bg-gradient-to-r from-sky-200 to-sky-400 absolute top-0 shadow-inner"></div>
-              {/* Squash Ball (FAB) */}
-              <div className="w-10 h-4 rounded-t-[20px] bg-gradient-to-b from-yellow-300 to-yellow-500 absolute -top-[16px] shadow-[0_0_15px_rgba(250,204,21,0.6)] flex items-end justify-center"></div>
-            </div>
-
-            {/* Leadframe Area (Substrate side) */}
-            <div className="w-48 h-6 bg-gradient-to-b from-amber-700 to-amber-900 absolute bottom-0 ml-[180px] rounded-sm shadow-[0_10px_20px_rgba(0,0,0,0.5)] border-t border-amber-500">
-              {/* Plating Area */}
-              <div className="w-24 h-2 bg-gradient-to-r from-yellow-600 to-yellow-800 absolute top-0 left-4 shadow-inner"></div>
-              {/* Wedge Tail */}
-              <div className="w-14 h-2 bg-yellow-400 absolute left-8 -top-2 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.5)] transform -rotate-[10deg] origin-right"></div>
-            </div>
-
-            {/* SVG Wire Path */}
-            <svg className="absolute w-[600px] h-[300px] bottom-[2px] left-1/2 -ml-[300px] pointer-events-none overflow-visible z-20">
-               {/* Loop representation using Quadratic/Cubic Beziers */}
-               <path 
-                 d={`M 220 280 C 220 ${280 - loopHeight/1.1} 310 ${280 - loopHeight/1.2} ${375 + length/15} 295`} 
-                 fill="none" 
-                 stroke="url(#goldGradient)" 
-                 strokeWidth="4" 
-                 strokeLinecap="round"
-                 filter="drop-shadow(0px 8px 6px rgba(0,0,0,0.6))"
-                 className={`${!isValidLoop ? 'opacity-30' : ''}`}
-               />
-               {!isValidLoop && (
-                 <path 
-                   d={`M 220 280 Q 295 320 ${375 + length/15} 295`} 
-                   fill="none" 
-                   stroke="#ef4444" 
-                   strokeWidth="3"
-                   strokeDasharray="4 4" 
-                 />
-               )}
-               <defs>
-                 <linearGradient id="goldGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-                   <stop offset="0%" stopColor="#fbbf24" />
-                   <stop offset="30%" stopColor="#fef08a" />
-                   <stop offset="70%" stopColor="#eab308" />
-                   <stop offset="100%" stopColor="#b45309" />
-                 </linearGradient>
-               </defs>
-            </svg>
-         </div>
-
-         {/* Capillary Tool Indicator hovering/animating */}
-         <div className="absolute bottom-[200px] ml-[240px] z-30 flex flex-col items-center opacity-80 pointer-events-none">
-            <div className="w-8 h-20 bg-gradient-to-b from-slate-200 to-slate-400 rounded-b opacity-40"></div>
-         </div>
-
-         {/* Dashboard parameters */}
-         <div className={`absolute w-full bottom-0 ${isRtl ? 'right-4 left-4' : 'left-0 right-0'} flex justify-between text-[11px] font-mono text-slate-300 bg-slate-950/80 px-4 py-2 border-t border-slate-800 z-40`}>
+           <Callout x={530} y={118} lx={20} ly={28} anchor="start" dot="#cbd5e1">{t('Ceramic Capillary')}</Callout>
+           <Callout x={392} y={controlY} lx={740} ly={28} anchor="end" dot="#fde047">{t('Gold Wire (25μm)')}</Callout>
+           <Callout x={276} y={218} lx={20} ly={220} anchor="start" dot="#7dd3fc">{t('Al Pad (FAB)')}</Callout>
+           <Callout x={endX} y={218} lx={740} ly={220} anchor="end" dot="#eab308">{t('Stitch Wedge Bond')}</Callout>
+         </svg>
+         <div className={`w-full ${isRtl ? 'flex-row-reverse' : ''} flex justify-between text-[11px] font-mono text-slate-300 bg-slate-950/80 px-4 py-2 border-t border-slate-800`}>
             <span>{t('Height constraint')}: <span className="text-white font-bold">{loopHeight}μm</span></span>
             <span>{t('Length')}: <span className="text-white font-bold">{length}μm</span></span>
             <span className={isValidLoop ? "text-green-400 font-bold" : "text-red-400 font-bold"}>

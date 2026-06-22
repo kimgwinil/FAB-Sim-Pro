@@ -5,13 +5,15 @@ import { AlertCircle, FileText, Activity, Disc3 } from 'lucide-react';
 import { useTranslation } from '../i18n';
 import { Quiz } from '../components/Quiz';
 import { dicingQuestions } from '../data/quizData';
-import { theoryData } from '../data/theoryData';
+import { getTheoryChapter } from '../data/theoryData';
+import { TheoryView } from '../components/TheoryView';
 
 export function WaferDicing({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
   const { dicingInputs, setDicingInputs, setYields } = useAppContext();
   const { t, language } = useTranslation();
 
   const { rpm, feedRate, coolant, bladeWear } = dicingInputs;
+  const theory = getTheoryChapter('dicing', language);
 
   // Calculators
   const chipping = (feedRate / rpm * 1000) + (bladeWear * 0.5);
@@ -22,7 +24,7 @@ export function WaferDicing({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
   // Determine bounds & statuses
   const chippingStatus = chipping < 5 ? 'Good' : chipping <= 15 ? 'Warning' : 'Bad';
   const tempStatus = temp < 180 ? 'Good' : temp <= 220 ? 'Warning' : 'Bad';
-  const processStatus = chippingStatus === 'Bad' || tempStatus === 'Bad' ? 'Fail' : 
+  const processStatus = chippingStatus === 'Bad' || tempStatus === 'Bad' ? 'Fail' :
                         chippingStatus === 'Warning' || tempStatus === 'Warning' ? 'Warning' : 'Pass';
 
   const getStatusText = (s: string) => {
@@ -46,44 +48,17 @@ export function WaferDicing({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
         {mode === 'theory' && (
            <Card className="bg-slate-50 border-slate-200 shadow-inner max-w-4xl">
              <CardHeader title={t('Practice Theory')} icon={<FileText className="w-5 h-5 text-blue-600" />} />
-             <CardContent className="space-y-6">
-                <div>
-                  <h4 className="font-semibold text-slate-900 leading-tight mb-3 text-lg border-b pb-2">
-                    {theoryData.dicing[language as 'en'|'ko'|'ar']?.title || theoryData.dicing.en.title}
-                  </h4>
-                  <div className="prose prose-sm prose-slate text-sm text-slate-700">
-                    {(theoryData.dicing[language as 'en'|'ko'|'ar']?.content || theoryData.dicing.en.content).split('\n\n').map((paragraph, idx) => (
-                        <p key={idx} className="leading-relaxed mb-3 break-keep">{paragraph}</p>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-200">
-                 <h4 className="font-semibold text-slate-900 mb-4">{t('Key Control Variables')}</h4>
-                 <div className="overflow-x-auto border border-slate-200 rounded-lg bg-white">
-                   <table className="w-full text-sm text-left">
-                     <thead className="bg-slate-100">
-                       <tr><th className="px-4 py-3 border">{t('Variable')}</th><th className="px-4 py-3 border">{t('Effect')}</th><th className="px-4 py-3 border">{t('Risk')}</th></tr>
-                     </thead>
-                     <tbody>
-                       <tr><td className="px-4 py-3 border font-medium">Blade RPM</td><td className="px-4 py-3 border">{t('Cutting force')}</td><td className="px-4 py-3 border">{t('Overheat / Chipping')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Feed Rate</td><td className="px-4 py-3 border">{t('Throughput, Load')}</td><td className="px-4 py-3 border">{t('Die Crack')}</td></tr>
-                       <tr><td className="px-4 py-3 border font-medium">Coolant</td><td className="px-4 py-3 border">{t('Heat dissipation, cleaning')}</td><td className="px-4 py-3 border">{t('Blade warping')}</td></tr>
-                     </tbody>
-                   </table>
-                 </div>
-                </div>
+             <CardContent>
+                <TheoryView title={theory.title} content={theory.content} />
              </CardContent>
            </Card>
         )}
 
-        {mode === 'sim' && <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
-          <div className="lg:col-span-8 flex flex-col">
-            <div className="flex-1 min-h-[300px]">
-              <DicingVisualizer rpm={rpm} feedRate={feedRate} coolant={coolant} />
-            </div>
+        {mode === 'sim' && <div className="flex flex-col gap-4">
+          <div className="mx-auto w-full max-w-[680px]">
+            <DicingVisualizer rpm={rpm} feedRate={feedRate} coolant={coolant} />
           </div>
-          <div className="lg:col-span-4 flex flex-col gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader title={t('Process Parameters')} subtitle={t('Adjust blade and feed inputs')} />
               <CardContent className="space-y-6" >
@@ -104,7 +79,7 @@ export function WaferDicing({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
                 <ResultRow label={t('Estimated Chipping')} value={`${chipping.toFixed(2)} μm`} status={getStatusText(chippingStatus)} rawStatus={chippingStatus} />
                 <ResultRow label={t('Cutting Temperature')} value={`${temp.toFixed(1)} °C`} status={getStatusText(tempStatus)} rawStatus={tempStatus} />
                 <ResultRow label={t('Die Yield Prediction')} value={`${calculatedYield.toFixed(2)} %`} status={getStatusText(processStatus)} rawStatus={processStatus === 'Pass' ? 'Good' : processStatus} />
-                
+
                 <div className="pt-4 border-t border-slate-100">
                   <h4 className="text-sm font-medium text-slate-900 mb-2">{t('Process Verdict')}</h4>
                   <div className={`p-4 rounded-lg flex items-start gap-3 ${processStatus === 'Pass' ? 'bg-green-50 text-green-800' : processStatus === 'Warning' ? 'bg-amber-50 text-amber-800' : 'bg-red-50 text-red-800'}`}>
@@ -112,7 +87,7 @@ export function WaferDicing({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
                     <div>
                       <p className="font-semibold">{processStatus.toUpperCase()}</p>
                       <p className="text-sm mt-1 opacity-90">
-                        {processStatus === 'Pass' ? t('Process is within optimal operating limits.') : 
+                        {processStatus === 'Pass' ? t('Process is within optimal operating limits.') :
                          processStatus === 'Warning' ? t('Chipping or temperature is approaching critical limits. Consider replacing blade or increasing coolant.') :
                          t('Critical failure predicted. Reduce feed rate or RPM, or increase coolant immediately.')}
                       </p>
@@ -128,11 +103,11 @@ export function WaferDicing({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
           <Card className="max-w-4xl">
             <CardHeader title={t('Failure Analysis')} />
             <CardContent className="space-y-4">
-              <ScenarioCard title={t('Backside Chipping')} cause={t('Excessive feed rate, dull blade')} 
+              <ScenarioCard title={t('Backside Chipping')} cause={t('Excessive feed rate, dull blade')}
                 solution={t('Decrease feed rate, apply dressing to blade.')} />
-              <ScenarioCard title={t('Thermomechanical Damage')} cause={t('Insufficient coolant, high RPM')} 
+              <ScenarioCard title={t('Thermomechanical Damage')} cause={t('Insufficient coolant, high RPM')}
                 solution={t('Check nozzle alignment, increase flow to >1.5 L/min.')} />
-              <ScenarioCard title={t('Die Crack')} cause={t('Wafer stress, vibration')} 
+              <ScenarioCard title={t('Die Crack')} cause={t('Wafer stress, vibration')}
                 solution={t('Check tape tension and chuck table vacuum.')} />
             </CardContent>
           </Card>
@@ -151,7 +126,7 @@ export function SliderInput({ label, min, max, value, step, onChange }: any) {
         <label className="text-sm font-medium text-slate-700">{label}</label>
         <span className="text-sm font-mono text-blue-600">{value}</span>
       </div>
-      <input type="range" min={min} max={max} step={step} value={value} 
+      <input type="range" min={min} max={max} step={step} value={value}
         onChange={e => onChange(parseFloat(e.target.value))}
         className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
     </div>
@@ -189,85 +164,91 @@ function ScenarioCard({title, cause, solution}: any) {
 
 export function DicingVisualizer({ rpm, feedRate, coolant }: { rpm: number, feedRate: number, coolant: number }) {
   const { t } = useTranslation();
-  
+  const spin = rpm > 35000 ? 'animate-[spin_0.2s_linear_infinite]' : rpm > 25000 ? 'animate-[spin_0.4s_linear_infinite]' : 'animate-[spin_0.8s_linear_infinite]';
+  const coolantOn = coolant > 1.2;
+
+  const Callout = ({ x, y, lx, ly, anchor = 'start', color, label, width = 132 }: {
+    x: number; y: number; lx: number; ly: number; anchor?: 'start' | 'end'; color: string; label: string; width?: number;
+  }) => {
+    const boxX = anchor === 'end' ? lx - width : lx;
+    const textX = anchor === 'end' ? lx - 10 : lx + 10;
+    return (
+      <g>
+        <line x1={x} y1={y} x2={lx} y2={ly} stroke="#cbd5e1" strokeWidth="1.35" strokeLinecap="round" opacity="0.92" />
+        <circle cx={x} cy={y} r="4" fill={color} stroke="#f8fafc" strokeWidth="1.5" />
+        <rect x={boxX} y={ly - 13} width={width} height="26" rx="6" fill="#0f172a" stroke={color} strokeWidth="1.2" opacity="0.96" />
+        <text x={textX} y={ly + 4} fill="#f8fafc" fontSize="12" fontWeight="700" textAnchor={anchor === 'end' ? 'end' : 'start'}>
+          {label}
+        </text>
+      </g>
+    );
+  };
+
+  const scribeXs = [270, 295, 320, 345, 370, 395, 420, 445, 470, 495];
+  const dieRows = [142, 152, 162];
+
+  const waferGrid = (
+    <g clipPath="url(#wafer-clip)">
+      <rect x="250" y="136" width="260" height="36" fill="#cbd5e1" />
+      {scribeXs.map((x) => (
+        <line key={`v-${x}`} x1={x} y1="136" x2={x} y2="172" stroke="#64748b" strokeWidth="1" opacity="0.9" />
+      ))}
+      {dieRows.map((y) => (
+        <line key={`h-${y}`} x1="250" y1={y} x2="510" y2={y} stroke="#64748b" strokeWidth="1" opacity="0.75" />
+      ))}
+      <line x1="380" y1="136" x2="380" y2="172" stroke="#f97316" strokeWidth="5" opacity="0.95" />
+      <line x1="380" y1="136" x2="380" y2="172" stroke="#fed7aa" strokeWidth="1.2" strokeDasharray="4 4" />
+    </g>
+  );
+
   return (
     <Card className="bg-[#0f172a] border-slate-700 shadow-2xl relative overflow-hidden">
-      <CardContent className="h-72 relative p-0 flex flex-col justify-end items-center">
-        {/* Background grid for engineering look */}
-        <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none"></div>
+      <CardContent className="p-0">
+        <svg viewBox="0 0 760 240" className="w-full block select-none" style={{ aspectRatio: '760 / 240' }}>
+          <defs>
+            <pattern id="dicing-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M20 0H0V20" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+            </pattern>
+            <clipPath id="wafer-clip">
+              <rect x="250" y="136" width="260" height="36" rx="12" />
+            </clipPath>
+          </defs>
+          <rect width="760" height="240" fill="url(#dicing-grid)" />
 
-        {/* --- Labels (Positioned at edges so they don't block the visual) --- */}
-        <div className="absolute top-4 left-4 z-10 flex flex-col gap-1 items-start">
-          <div className="text-white text-[10px] bg-slate-800/80 px-2 py-1 rounded border border-slate-600 backdrop-blur-sm flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>{t('Coolant Nozzle')}
-          </div>
-          <div className="text-white text-[10px] bg-slate-800/80 px-2 py-1 rounded border border-slate-600 backdrop-blur-sm flex items-center gap-2 mt-2">
-            <div className="w-2 h-2 rounded-full bg-slate-300"></div>{t('Diamond Blade')}
-          </div>
-        </div>
+          {/* --- Diagram: chuck table + wafer + spinning blade + coolant --- */}
+          {/* Chuck table */}
+          <rect x="215" y="184" width="330" height="18" rx="3" fill="#334155" stroke="#475569" strokeWidth="1.5" />
+          {/* Dicing tape + silicon wafer map with scribe lines */}
+          <rect x="236" y="172" width="288" height="8" rx="4" fill="#38bdf8" opacity="0.55" stroke="#67e8f9" strokeWidth="1" />
+          {waferGrid}
+          <rect x="250" y="136" width="260" height="36" rx="12" fill="none" stroke="#e2e8f0" strokeWidth="1.4" />
+          {/* Spindle arbor */}
+          <rect x="366" y="36" width="28" height="72" rx="3" fill="#64748b" stroke="#94a3b8" strokeWidth="1.5" />
+          {/* Coolant spray (reacts to flow) */}
+          <rect x="286" y="68" width="24" height="14" rx="2" transform="rotate(34 298 75)" fill="#475569" stroke="#94a3b8" />
+          <path d="M300 84 L376 152" stroke="#22d3ee" strokeLinecap="round" strokeWidth={coolantOn ? 7 : 4} opacity={coolantOn ? 0.65 : 0.18} />
+          {/* Spinning dicing blade */}
+          <circle cx="380" cy="108" r="54" fill="none" stroke="#e2e8f0" strokeWidth="10" strokeDasharray="11 9" opacity="0.92"
+            className={spin} style={{ transformBox: 'fill-box', transformOrigin: 'center' }} />
+          {/* Blade hub */}
+          <circle cx="380" cy="108" r="11" fill="#f1f5f9" stroke="#475569" strokeWidth="2" />
+          <circle cx="380" cy="108" r="4" fill="#1e293b" />
+          {/* Cut spark */}
+          <circle cx="380" cy="163" r="4" fill="#fde68a" opacity="0.85" />
 
-        <div className="absolute top-4 right-4 z-10 flex flex-col gap-1 items-end">
-          <div className="text-white text-[10px] bg-slate-800/80 px-2 py-1 rounded border border-slate-600 backdrop-blur-sm flex items-center gap-2">
-            {t('Silicon Wafer')} (775μm)<div className="w-2 h-2 rounded-full bg-slate-400"></div>
-          </div>
-          <div className="text-white text-[10px] bg-slate-800/80 px-2 py-1 rounded border border-slate-600 backdrop-blur-sm flex items-center gap-2 mt-2">
-            {t('Chuck Table')}<div className="w-2 h-2 rounded-full bg-slate-700"></div>
-          </div>
-        </div>
-
-        {/* --- Animated Simulator Elements --- */}
-        <div className="relative w-full h-[180px] z-0 flex justify-center items-end pb-8">
-          
-          {/* Coolant Stream Array (Left Side) */}
-          <div className="absolute left-[38%] top-[-20px] w-6 h-28 transform origin-top -rotate-[25deg] flex flex-col items-center">
-            <div className="w-4 h-6 border-2 border-slate-500 bg-slate-700 rounded-sm shadow-xl z-20"></div> {/* Nozzle */}
-            <div className={`w-3 h-full bg-cyan-400/50 blur-[2px] transition-opacity duration-300 ${coolant > 1.2 ? 'opacity-100' : 'opacity-20'}`}></div> {/* Water Stream */}
-            {coolant > 1.2 && (
-               <div className="w-16 h-8 bg-cyan-400/30 blur-[6px] rounded-full absolute bottom-[-10px] right-[-10px]"></div>
-            )}
-          </div>
-
-          {/* Spindle & Blade */}
-          <div className="absolute top-[-10px] left-1/2 -ml-[65px] flex flex-col items-center z-10">
-            {/* Spindle head */}
-            <div className="w-16 h-6 bg-gradient-to-r from-slate-600 to-slate-400 rounded-t-lg border-x-2 border-t-2 border-slate-500 shadow-2xl z-20"></div>
-            {/* Blade Center Mount */}
-            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-slate-300 to-slate-100 absolute top-[14px] z-30 shadow-[0_0_10px_black] border-2 border-slate-500 flex items-center justify-center">
-               <div className="w-3 h-3 bg-slate-800 rounded-full"></div>
-            </div>
-            {/* Blade itself */}
-            <div className={`w-[130px] h-[130px] rounded-full border-[14px] border-slate-300 border-dashed absolute top-2 shadow-[0_0_20px_rgba(0,0,0,0.8)] z-10 
-              ${rpm > 35000 ? 'animate-[spin_0.2s_linear_infinite]' : rpm > 25000 ? 'animate-[spin_0.4s_linear_infinite]' : 'animate-[spin_0.8s_linear_infinite]'}`}>
-            </div>
-          </div>
-
-          {/* Wafer & Wafer Mount (Moving horizontally to simulate feed rate) */}
-          {/* We animate this layer dragging left using keyframes based on feedrate, but we'll use an infinite sliding background trick or just keep static with chips to represent relative motion */}
-          <div className="relative w-full overflow-hidden flex justify-center z-0">
-             {/* Chuck Table */}
-             <div className="absolute bottom-0 w-[600px] h-4 bg-gradient-to-r from-slate-800 to-slate-700 border-t-2 border-slate-600 flex justify-center items-start overflow-hidden">
-                {/* Horizontal slide effect to simulate table moving */}
-                <div className={`w-[200%] h-full flex bg-[linear-gradient(90deg,transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:40px_10px] 
-                  ${feedRate > 50 ? 'animate-[slide_0.5s_linear_infinite]' : feedRate > 20 ? 'animate-[slide_1s_linear_infinite]' : 'animate-[slide_2s_linear_infinite]'}`}>
-                </div>
-             </div>
-             
-             {/* Wafer */}
-             <div className="absolute bottom-4 w-[480px] h-3 bg-gradient-to-r from-slate-400 via-slate-300 to-slate-400 border-y border-slate-500 z-10 flex justify-center shadow-lg">
-                {/* The Cut Kerf */}
-                <div className="w-[4px] h-[10px] bg-slate-900 absolute top-0 shadow-inner"></div>
-             </div>
-
-             {/* Debris / Chips (Ejecting from cut point) */}
-             <div className="absolute bottom-6 ml-[15px] z-20">
-                <div className={`text-slate-100 text-[8px] font-bold opacity-80 ${feedRate > 50 ? 'animate-[bounce_0.2s_infinite]' : 'animate-[bounce_0.5s_infinite]'}`}>. : </div>
-                <div className={`text-slate-200 text-[6px] font-bold opacity-60 ml-4 ${feedRate > 50 ? 'animate-[bounce_0.3s_infinite]' : 'animate-[bounce_0.6s_infinite]'}`}>* . </div>
-             </div>
-          </div>
-        </div>
+          {/* --- Part-name callouts with leader lines (kept clear of the diagram) --- */}
+          <Callout x={300} y={84} lx={20} ly={26} color="#22d3ee" label={t('Coolant Nozzle')} width={126} />
+          <Callout x={380} y={50} lx={20} ly={64} color="#94a3b8" label={t('Spindle Arbor')} width={126} />
+          <Callout x={424} y={80} lx={740} ly={26} anchor="end" color="#e2e8f0" label={t('Diamond Blade')} width={126} />
+          <Callout x={380} y={154} lx={740} ly={64} anchor="end" color="#f97316" label={t('Cutting Kerf')} width={126} />
+          <Callout x={318} y={152} lx={20} ly={182} color="#cbd5e1" label={`${t('Silicon Wafer')} 775μm`} width={146} />
+          <Callout x={295} y={142} lx={20} ly={218} color="#64748b" label={t('Scribe Lines')} width={126} />
+          <Callout x={510} y={176} lx={740} ly={154} anchor="end" color="#38bdf8" label={t('Dicing Tape')} width={126} />
+          <Callout x={542} y={193} lx={740} ly={192} anchor="end" color="#64748b" label={t('Chuck Table')} width={126} />
+        </svg>
 
         {/* Dashboard parameters footer */}
-        <div className="w-full bg-slate-950/80 px-4 py-2 border-t border-slate-800 flex justify-between text-[11px] font-mono text-slate-300 z-20">
+        <div className="w-full bg-slate-950/80 px-4 py-2 border-t border-slate-800 flex justify-between text-[11px] font-mono text-slate-300">
            <span>{t('Blade RPM')}: <span className="text-white font-bold">{rpm}</span></span>
            <span>{t('Feed Rate')}: <span className="text-white font-bold">{feedRate} mm/s</span></span>
            <span className={coolant >= 1.5 ? "text-cyan-400 font-bold" : "text-amber-400 font-bold"}>{coolant >= 1.5 ? t('COOLANT OK') : t('COOLANT LOW')}</span>
@@ -276,4 +257,3 @@ export function DicingVisualizer({ rpm, feedRate, coolant }: { rpm: number, feed
     </Card>
   );
 }
-
