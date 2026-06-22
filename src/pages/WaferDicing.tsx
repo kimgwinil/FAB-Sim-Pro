@@ -237,12 +237,12 @@ export function DicingVisualizer({ rpm, feedRate, coolant }: { rpm: number, feed
           <circle cx="380" cy="163" r="4" fill="#fde68a" opacity="0.85" />
 
           {/* --- Part-name callouts with leader lines (kept clear of the diagram) --- */}
-          <Callout x={300} y={84} lx={20} ly={26} color="#22d3ee" label={t('Coolant Nozzle')} width={126} />
-          <Callout x={380} y={50} lx={20} ly={64} color="#94a3b8" label={t('Spindle Arbor')} width={126} />
+          <Callout x={380} y={50} lx={20} ly={26} color="#94a3b8" label={t('Spindle Arbor')} width={126} />
+          <Callout x={300} y={84} lx={20} ly={64} color="#22d3ee" label={t('Coolant Nozzle')} width={126} />
           <Callout x={424} y={80} lx={740} ly={26} anchor="end" color="#e2e8f0" label={t('Diamond Blade')} width={126} />
           <Callout x={380} y={154} lx={740} ly={64} anchor="end" color="#f97316" label={t('Cutting Kerf')} width={126} />
-          <Callout x={318} y={152} lx={20} ly={182} color="#cbd5e1" label={`${t('Silicon Wafer')} 775μm`} width={146} />
-          <Callout x={295} y={142} lx={20} ly={218} color="#64748b" label={t('Scribe Lines')} width={126} />
+          <Callout x={295} y={142} lx={20} ly={182} color="#64748b" label={t('Scribe Lines')} width={126} />
+          <Callout x={318} y={152} lx={20} ly={218} color="#cbd5e1" label={`${t('Silicon Wafer')} 775μm`} width={146} />
           <Callout x={510} y={176} lx={740} ly={154} anchor="end" color="#38bdf8" label={t('Dicing Tape')} width={126} />
           <Callout x={542} y={193} lx={740} ly={192} anchor="end" color="#64748b" label={t('Chuck Table')} width={126} />
         </svg>
