@@ -399,9 +399,18 @@ const dict_ar: Record<string, string> = {
   "Loop Sag Risk": "خطر ترهل الحلقة",
   "Ball Shear Strength": "قوة قص الكرة",
   "Rolling WB Yield": "عائد ربط الأسلاك",
+  "Gold Wire (25μm)": "سلك ذهب (25 ميكرومتر)",
+  "Ceramic Capillary": "كابيلاري خزفي",
+  "Al Pad (FAB)": "وسادة ألمنيوم (FAB)",
+  "Stitch Wedge Bond": "ربط وتدي ثانوي",
   "SAG FAIL": "فشل الترهل",
 
   // Molding
+  "Steel Mold Chase": "قالب فولاذي",
+  "ATE Tester Head": "رأس جهاز اختبار ATE",
+  "Probe Pins (Pogo)": "دبابيس المجس (Pogo)",
+  "Test Socket PCB": "لوحة مقبس الاختبار",
+  "Failure Analysis & DOE": "تحليل الأعطال وتصميم التجارب (DOE)",
   "Transfer Molding": "قولبة النقل",
   "EMC encapsulation process (Silica 85wt%, 4-cavity QFP).": "عملية تغليف EMC.",
   "Mold Parameters": "معلمات القالب",
@@ -444,6 +453,7 @@ const dict_ar: Record<string, string> = {
   "Chipping or temperature is approaching critical limits. Consider replacing blade or increasing coolant.": "التكسر أو درجة الحرارة يقترب من الحدود الحرجة. فكر في استبدال الشفرة أو زيادة سائل التبريد.",
   "Critical failure predicted. Reduce feed rate or RPM, or increase coolant immediately.": "من المتوقع حدوث فشل حرج. قلل التغذية أو سرعة الدوران، أو زد سائل التبريد فورا.",
   "Theoretical Background": "الأساس النظري",
+  "Practice Theory": "نظرية التدريب العملي",
   "Core Physical Theory": "النظرية الفيزيائية الأساسية",
   "Brittle Fracture Mechanics": "ميكانيكا الكسر الهش",
   "Silicon is a brittle material, crack propagation follows Griffith theory": "السيليكون مادة هشة، انتشار الشقوق يتبع نظرية غريفيث",
@@ -480,6 +490,7 @@ const dict_ar: Record<string, string> = {
   "Action": "الإجراء",
   "Root Cause": "السبب الجذري",
   "Solution": "الحل",
+  "Explanation": "الشرح",
 
   // DieBonding
   "Epoxy Curing (Arrhenius Model)": "معالجة الإيبوكسي (نموذج أرهينيوس)",
