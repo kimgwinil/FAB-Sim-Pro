@@ -66,14 +66,14 @@ export function DieBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
            </Card>
         )}
 
-        {mode === 'sim' && <div className="flex flex-col gap-4">
-          <div className="mx-auto w-full max-w-[760px]">
+        {mode === 'sim' && <div className="flex flex-col gap-4 lg:gap-5">
+          <div className="mx-auto w-full max-w-[700px] lg:sticky lg:top-0 lg:z-20 lg:bg-slate-50 lg:pt-1 lg:pb-3">
             <BondingVisualizer dispense={dispense} time={time} pressure={pressure} />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5">
             <Card>
               <CardHeader title={t('Bonding Parameters')} />
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-5 lg:space-y-4">
                 <SliderInput label={t('Epoxy Dispense (mg)')} min={0.1} max={0.5} value={dispense} step={0.01} passRange={{ min: 0.2, max: 0.28 }}
                   onChange={(v: number) => setBondingInputs({...bondingInputs, dispense: v})} />
                 <SliderInput label={t('Cure Temp (°C)')} min={150} max={200} value={temp} step={1} passRange={{ min: 175, max: 200 }}
@@ -87,7 +87,7 @@ export function DieBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
 
             <Card>
               <CardHeader title={t('Output Analytics')} />
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-5 lg:space-y-4">
                 <ResultRow label={t('Adhesion Thickness (opt: 10-30μm)')} value={`${thickness.toFixed(1)} μm`} status={getStatusText(thicknessStatus)} rawStatus={thicknessStatus} />
                 <ResultRow label={t('Expected Void Rate')} value={`${voidRate.toFixed(1)} %`} status={getStatusText(voidStatus)} rawStatus={voidStatus} />
                 <ResultRow label={t('Epoxy Cure Degree')} value={`${cureDegree.toFixed(1)} %`} status={getStatusText(cureStatus)} rawStatus={cureStatus} />

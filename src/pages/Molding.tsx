@@ -71,14 +71,14 @@ export function Molding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
            </Card>
         )}
 
-        {mode === 'sim' && <div className="flex flex-col gap-4">
-          <div className="mx-auto w-full max-w-[760px]">
+        {mode === 'sim' && <div className="flex flex-col gap-4 lg:gap-5">
+          <div className="mx-auto w-full max-w-[700px] lg:sticky lg:top-0 lg:z-20 lg:bg-slate-50 lg:pt-1 lg:pb-3">
             <MoldingVisualizer transferPressure={transferPressure} cureDegree={cureDegree} />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5">
             <Card>
               <CardHeader title={t('Mold Parameters')} />
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-5 lg:space-y-4">
                 <SliderInput label={t('Transfer Pressure (MPa)')} min={5} max={15} value={transferPressure} step={0.5} passRange={{ min: 8, max: 12 }}
                   onChange={(v: number) => setMoldingInputs({...moldingInputs, transferPressure: v})} />
                  <SliderInput label={t('Mold Temp (°C)')} min={165} max={185} value={moldTemp} step={1} passRange={{ min: 175, max: 185 }}
@@ -94,7 +94,7 @@ export function Molding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
 
             <Card>
               <CardHeader title={t('Rheology & Thermomechanics')} />
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-5 lg:space-y-4">
                 <ResultRow label={t('Fill Time')} value={`${fillTime.toFixed(1)} sec`} status={getStatusText(fillTime >= 5 && fillTime <= 15 ? 'Good' : 'Warning')} rawStatus={fillTime >= 5 && fillTime <= 15 ? 'Good' : 'Warning'} />
                 <ResultRow label={t('Void Trapping Risk')} value={`${voidRisk.toFixed(1)} %`} status={getStatusText(voidRisk < 20 ? 'Good' : 'Bad')} rawStatus={voidRisk < 20 ? 'Good' : 'Bad'} />
                 <ResultRow label={t('Resin Cure Degree')} value={`${cureDegree.toFixed(1)} %`} status={getStatusText(cureDegree >= 85 ? 'Good' : 'Bad')} rawStatus={cureDegree >= 85 ? 'Good' : 'Bad'} />

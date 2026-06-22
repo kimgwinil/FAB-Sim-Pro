@@ -54,14 +54,14 @@ export function WaferDicing({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
            </Card>
         )}
 
-        {mode === 'sim' && <div className="flex flex-col gap-4">
-          <div className="mx-auto w-full max-w-[680px]">
+        {mode === 'sim' && <div className="flex flex-col gap-4 lg:gap-5">
+          <div className="mx-auto w-full max-w-[640px] lg:sticky lg:top-0 lg:z-20 lg:bg-slate-50 lg:pt-1 lg:pb-3">
             <DicingVisualizer rpm={rpm} feedRate={feedRate} coolant={coolant} />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5">
             <Card>
               <CardHeader title={t('Process Parameters')} subtitle={t('Adjust blade and feed inputs')} />
-              <CardContent className="space-y-6" >
+              <CardContent className="space-y-5 lg:space-y-4" >
                 <SliderInput label={t('Blade RPM (RPM)')} min={20000} max={40000} value={rpm} step={100} passRange={{ min: 25000, max: 35000 }}
                   onChange={(v: number) => setDicingInputs({...dicingInputs, rpm: v})} />
                 <SliderInput label={t('Feed Rate (mm/s)')} min={10} max={100} value={feedRate} step={1} passRange={{ min: 10, max: 25 }}
@@ -75,7 +75,7 @@ export function WaferDicing({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
 
             <Card>
               <CardHeader title={t('Process Results')} subtitle={t('Calculated output variables')} />
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-5 lg:space-y-4">
                 <ResultRow label={t('Estimated Chipping')} value={`${chipping.toFixed(2)} μm`} status={getStatusText(chippingStatus)} rawStatus={chippingStatus} />
                 <ResultRow label={t('Cutting Temperature')} value={`${temp.toFixed(1)} °C`} status={getStatusText(tempStatus)} rawStatus={tempStatus} />
                 <ResultRow label={t('Die Yield Prediction')} value={`${calculatedYield.toFixed(2)} %`} status={getStatusText(processStatus)} rawStatus={processStatus === 'Pass' ? 'Good' : processStatus} />
@@ -127,9 +127,9 @@ export function SliderInput({ label, min, max, value, step, onChange, passRange 
   const formatValue = (v: number) => Number.isInteger(v) ? String(v) : String(Number(v.toFixed(2)));
   return (
     <div>
-      <div className="flex justify-between mb-2">
-        <label className="text-sm font-medium text-slate-700">{label}</label>
-        <span className="text-sm font-mono text-blue-600">{value}</span>
+      <div className="flex items-start justify-between gap-3 mb-2">
+        <label className="min-w-0 text-sm font-medium leading-snug text-slate-700">{label}</label>
+        <span className="shrink-0 text-sm font-mono text-blue-600">{value}</span>
       </div>
       <input type="range" min={min} max={max} step={step} value={value}
         onChange={e => onChange(parseFloat(e.target.value))}
@@ -144,7 +144,7 @@ export function SliderInput({ label, min, max, value, step, onChange, passRange 
             <span className="absolute top-0 h-3 w-px bg-emerald-600" style={{ left: `${passStart}%` }} />
             <span className="absolute top-0 h-3 w-px bg-emerald-600" style={{ left: `${passEnd}%` }} />
           </div>
-          <div className="flex justify-between text-[10px] leading-tight text-slate-500">
+          <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 text-[10px] leading-tight text-slate-500">
             <span>{t('PASS Range')}: {formatValue(passRange.min)}-{formatValue(passRange.max)}</span>
             <span>{t('Target')}</span>
           </div>
@@ -162,9 +162,9 @@ export function ResultRow({ label, value, status, rawStatus }: any) {
   };
   const colorKey = rawStatus || status;
   return (
-    <div className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
-      <span className="text-slate-600 text-sm">{label}</span>
-      <div className="flex items-center gap-3">
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 py-2 border-b border-slate-100 last:border-0">
+      <span className="min-w-0 text-slate-600 text-sm">{label}</span>
+      <div className="flex shrink-0 items-center gap-2">
         <span className="font-mono text-slate-900 font-medium">{value}</span>
         <span className={`px-2 py-0.5 text-xs font-semibold uppercase rounded border ${getColors(colorKey)}`}>{status}</span>
       </div>

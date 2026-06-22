@@ -86,14 +86,14 @@ export function WireBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
            </Card>
         )}
 
-        {mode === 'sim' && <div className="flex flex-col gap-4">
-          <div className="mx-auto w-full max-w-[760px]">
+        {mode === 'sim' && <div className="flex flex-col gap-4 lg:gap-5">
+          <div className="mx-auto w-full max-w-[700px] lg:sticky lg:top-0 lg:z-20 lg:bg-slate-50 lg:pt-1 lg:pb-3">
             <WireVisualizer loopHeight={loopHeight} length={length} isValidLoop={isValidLoop} />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5">
             <Card>
               <CardHeader title={t('Ultrasonic & Thermal Params')} />
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-5 lg:space-y-4">
                 <SliderInput label={t('US Power (mW)')} min={50} max={150} value={power} step={1} passRange={{ min: 80, max: 140 }}
                   onChange={(v: number) => setWireInputs({...wireInputs, power: v})} />
                 <SliderInput label={t('Bonding Temp (°C)')} min={150} max={200} value={temp} step={1} passRange={{ min: 160, max: 175 }}
@@ -109,7 +109,7 @@ export function WireBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
 
             <Card>
               <CardHeader title={t('Intermetallic & Mechanical')} />
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-5 lg:space-y-4">
                 <ResultRow label={t('Squashed Ball Diameter')} value={`${deformation.toFixed(1)} μm (${defRatio.toFixed(2)}x)`} status={getStatusText(defStatus)} rawStatus={defStatus} />
                 <ResultRow label={t('IMC Growth Zone')} value={`${imcThickness.toFixed(2)} nm`} status={getStatusText(imcStatus)} rawStatus={imcStatus} />
                 <ResultRow label={t('Loop Sag Risk')} value={`${sag.toFixed(1)} μm`} status={getStatusText(isValidLoop ? 'Good' : 'Bad')} rawStatus={isValidLoop ? 'Good' : 'Bad'} />

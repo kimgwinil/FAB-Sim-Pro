@@ -87,14 +87,14 @@ MTBF (Hours)    : ${mtbf.toLocaleString(undefined, {maximumFractionDigits: 0})} 
            </Card>
         )}
 
-        {mode === 'sim' && <div className="flex flex-col gap-4">
-          <div className="mx-auto w-full max-w-[760px]">
+        {mode === 'sim' && <div className="flex flex-col gap-4 lg:gap-5">
+          <div className="mx-auto w-full max-w-[700px] lg:sticky lg:top-0 lg:z-20 lg:bg-slate-50 lg:pt-1 lg:pb-3">
             <TestVisualizer testTemp={testTemp} testYield={testYield} successProb={successProb} />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5">
             <Card>
               <CardHeader title={t('Test Environment Setup')} />
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-5 lg:space-y-4">
                  <div className="mb-4">
                    <label className="text-sm font-medium text-slate-700 block mb-2">{t('Test Temperature (°C)')}</label>
                    <div className="flex gap-2 text-sm">
