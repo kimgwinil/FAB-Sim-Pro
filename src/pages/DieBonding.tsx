@@ -19,7 +19,7 @@ export function DieBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
 
   // Calculators
   const dieArea = 100; // 10x10 mm
-  const pressureCorrection = (pressure / 25) * 0.8;
+  const pressureCorrection = (pressure / 25) * 0.08;
   const thickness = (dispense * 1000) / (dieArea * pressureCorrection);
   
   const voidRate = Math.max(0, 15 - (pressure * 0.2) - (temp - 150) * 0.1);
@@ -74,13 +74,13 @@ export function DieBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
             <Card>
               <CardHeader title={t('Bonding Parameters')} />
               <CardContent className="space-y-6">
-                <SliderInput label={t('Epoxy Dispense (mg)')} min={0.1} max={0.5} value={dispense} step={0.01}
+                <SliderInput label={t('Epoxy Dispense (mg)')} min={0.1} max={0.5} value={dispense} step={0.01} passRange={{ min: 0.2, max: 0.28 }}
                   onChange={(v: number) => setBondingInputs({...bondingInputs, dispense: v})} />
-                <SliderInput label={t('Cure Temp (°C)')} min={150} max={200} value={temp} step={1}
+                <SliderInput label={t('Cure Temp (°C)')} min={150} max={200} value={temp} step={1} passRange={{ min: 175, max: 200 }}
                   onChange={(v: number) => setBondingInputs({...bondingInputs, temp: v})} />
-                <SliderInput label={t('Cure Time (min)')} min={30} max={120} value={time} step={1}
+                <SliderInput label={t('Cure Time (min)')} min={30} max={120} value={time} step={1} passRange={{ min: 55, max: 120 }}
                   onChange={(v: number) => setBondingInputs({...bondingInputs, time: v})} />
-                <SliderInput label={t('Bonding Pressure (gf)')} min={10} max={50} value={pressure} step={1}
+                <SliderInput label={t('Bonding Pressure (gf)')} min={10} max={50} value={pressure} step={1} passRange={{ min: 38, max: 50 }}
                   onChange={(v: number) => setBondingInputs({...bondingInputs, pressure: v})} />
               </CardContent>
             </Card>

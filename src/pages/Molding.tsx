@@ -21,13 +21,13 @@ export function Molding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
   const viscosity = 50 * Math.exp(3000 / (moldTemp + 273)) * Math.exp(-preheat / 100);
   const cavityVolume = 14 * 20 * 2.7 * 4; // 4 cavities
   const gateArea = 2.0; 
-  const fillTime = (viscosity * cavityVolume) / (transferPressure * 1e6 * gateArea) * 10; // Normalized for display scaling
+  const fillTime = (viscosity * cavityVolume) / (transferPressure * 1e6 * gateArea) * 3; // Normalized for display scaling
 
   // Void risk
-  const voidRisk = Math.max(0, 100 - transferPressure * 5 - (moldTemp - 165) * 2 + fillTime * 3);
+  const voidRisk = Math.max(0, 80 - transferPressure * 5 - (moldTemp - 165) * 2 + fillTime * 0.5);
   
   // Cure 
-  const cureDegree = Math.min(100, (moldTemp - 160) * cureTime * 0.01);
+  const cureDegree = Math.min(100, (moldTemp - 160) * cureTime * 0.05);
   
   // Stress
   const deltaT = moldTemp - 25;
@@ -79,15 +79,15 @@ export function Molding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
             <Card>
               <CardHeader title={t('Mold Parameters')} />
               <CardContent className="space-y-6">
-                <SliderInput label={t('Transfer Pressure (MPa)')} min={5} max={15} value={transferPressure} step={0.5}
+                <SliderInput label={t('Transfer Pressure (MPa)')} min={5} max={15} value={transferPressure} step={0.5} passRange={{ min: 8, max: 12 }}
                   onChange={(v: number) => setMoldingInputs({...moldingInputs, transferPressure: v})} />
-                 <SliderInput label={t('Mold Temp (°C)')} min={165} max={185} value={moldTemp} step={1}
+                 <SliderInput label={t('Mold Temp (°C)')} min={165} max={185} value={moldTemp} step={1} passRange={{ min: 175, max: 185 }}
                   onChange={(v: number) => setMoldingInputs({...moldingInputs, moldTemp: v})} />
-                 <SliderInput label={t('Pre-heat Temp (°C)')} min={70} max={100} value={preheat} step={1}
+                 <SliderInput label={t('Pre-heat Temp (°C)')} min={70} max={100} value={preheat} step={1} passRange={{ min: 80, max: 95 }}
                   onChange={(v: number) => setMoldingInputs({...moldingInputs, preheat: v})} />
-                <SliderInput label={t('Cure Time (sec)')} min={60} max={180} value={cureTime} step={5}
+                <SliderInput label={t('Cure Time (sec)')} min={60} max={180} value={cureTime} step={5} passRange={{ min: 110, max: 180 }}
                   onChange={(v: number) => setMoldingInputs({...moldingInputs, cureTime: v})} />
-                 <SliderInput label={t('Clamping Force (kN)')} min={50} max={200} value={clampForce} step={10}
+                 <SliderInput label={t('Clamping Force (kN)')} min={50} max={200} value={clampForce} step={10} passRange={{ min: 90, max: 200 }}
                   onChange={(v: number) => setMoldingInputs({...moldingInputs, clampForce: v})} />
               </CardContent>
             </Card>

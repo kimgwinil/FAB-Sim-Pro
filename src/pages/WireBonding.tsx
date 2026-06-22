@@ -22,7 +22,7 @@ export function WireBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
   const deformation = initialBall * (1 + force / 500 * 0.3 + power / 1000);
   const defRatio = deformation / initialBall;
   
-  const imcThickness = Math.max(0, (temp - 150) * 0.5 + power * 0.1);
+  const imcThickness = Math.max(0, (temp - 150) * 0.02 + power * 0.003);
   
   const tension = power * 0.5;
   const gravityConstant = 9.8e-3;
@@ -33,7 +33,7 @@ export function WireBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
   
   // Calculate Yield Penalty
   let penalty = 0;
-  if(defRatio < 1.2 || defRatio > 1.8) penalty += 5;
+  if(defRatio < 1.1 || defRatio > 1.8) penalty += 5;
   if(imcThickness > 2) penalty += 15;
   if(!isValidLoop) penalty += 20;
   const calculatedYield = Math.max(0, 100 - penalty);
@@ -42,7 +42,7 @@ export function WireBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
     setYields({ wire: calculatedYield });
   }, [calculatedYield]);
 
-  const defStatus = defRatio >= 1.2 && defRatio <= 1.8 ? 'Good' : 'Bad';
+  const defStatus = defRatio >= 1.1 && defRatio <= 1.8 ? 'Good' : 'Bad';
   const imcStatus = imcThickness >= 0.1 && imcThickness <= 1.0 ? 'Good' : imcThickness > 2 ? 'Bad' : 'Warning';
   
   // Ascii loop shape
@@ -94,15 +94,15 @@ export function WireBonding({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
             <Card>
               <CardHeader title={t('Ultrasonic & Thermal Params')} />
               <CardContent className="space-y-6">
-                <SliderInput label={t('US Power (mW)')} min={50} max={150} value={power} step={1}
+                <SliderInput label={t('US Power (mW)')} min={50} max={150} value={power} step={1} passRange={{ min: 80, max: 140 }}
                   onChange={(v: number) => setWireInputs({...wireInputs, power: v})} />
-                <SliderInput label={t('Bonding Temp (°C)')} min={150} max={200} value={temp} step={1}
+                <SliderInput label={t('Bonding Temp (°C)')} min={150} max={200} value={temp} step={1} passRange={{ min: 160, max: 175 }}
                   onChange={(v: number) => setWireInputs({...wireInputs, temp: v})} />
-                <SliderInput label={t('Bonding Force (gf)')} min={20} max={80} value={force} step={1}
+                <SliderInput label={t('Bonding Force (gf)')} min={20} max={80} value={force} step={1} passRange={{ min: 35, max: 75 }}
                   onChange={(v: number) => setWireInputs({...wireInputs, force: v})} />
-                <SliderInput label={t('Loop Height (μm)')} min={100} max={300} value={loopHeight} step={5}
+                <SliderInput label={t('Loop Height (μm)')} min={100} max={300} value={loopHeight} step={5} passRange={{ min: 180, max: 300 }}
                   onChange={(v: number) => setWireInputs({...wireInputs, loopHeight: v})} />
-                <SliderInput label={t('Wire Length (μm)')} min={500} max={3000} value={length} step={50}
+                <SliderInput label={t('Wire Length (μm)')} min={500} max={3000} value={length} step={50} passRange={{ min: 500, max: 1800 }}
                   onChange={(v: number) => setWireInputs({...wireInputs, length: v})} />
               </CardContent>
             </Card>

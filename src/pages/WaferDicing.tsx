@@ -62,13 +62,13 @@ export function WaferDicing({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
             <Card>
               <CardHeader title={t('Process Parameters')} subtitle={t('Adjust blade and feed inputs')} />
               <CardContent className="space-y-6" >
-                <SliderInput label={t('Blade RPM (RPM)')} min={20000} max={40000} value={rpm} step={100}
+                <SliderInput label={t('Blade RPM (RPM)')} min={20000} max={40000} value={rpm} step={100} passRange={{ min: 25000, max: 35000 }}
                   onChange={(v: number) => setDicingInputs({...dicingInputs, rpm: v})} />
-                <SliderInput label={t('Feed Rate (mm/s)')} min={10} max={100} value={feedRate} step={1}
+                <SliderInput label={t('Feed Rate (mm/s)')} min={10} max={100} value={feedRate} step={1} passRange={{ min: 10, max: 25 }}
                   onChange={(v: number) => setDicingInputs({...dicingInputs, feedRate: v})} />
-                <SliderInput label={t('Coolant Flow (L/min)')} min={0.5} max={3.0} value={coolant} step={0.1}
+                <SliderInput label={t('Coolant Flow (L/min)')} min={0.5} max={3.0} value={coolant} step={0.1} passRange={{ min: 2.0, max: 3.0 }}
                   onChange={(v: number) => setDicingInputs({...dicingInputs, coolant: v})} />
-                <SliderInput label={t('Blade Wear (%)')} min={0} max={100} value={bladeWear} step={1}
+                <SliderInput label={t('Blade Wear (%)')} min={0} max={100} value={bladeWear} step={1} passRange={{ min: 0, max: 4 }}
                   onChange={(v: number) => setDicingInputs({...dicingInputs, bladeWear: v})} />
               </CardContent>
             </Card>
@@ -119,7 +119,12 @@ export function WaferDicing({ mode }: { mode: 'sim'|'theory'|'fa'|'quiz' }) {
   );
 }
 
-export function SliderInput({ label, min, max, value, step, onChange }: any) {
+export function SliderInput({ label, min, max, value, step, onChange, passRange }: any) {
+  const { t } = useTranslation();
+  const clampPct = (v: number) => Math.min(100, Math.max(0, ((v - min) / (max - min)) * 100));
+  const passStart = passRange ? clampPct(passRange.min) : 0;
+  const passEnd = passRange ? clampPct(passRange.max) : 0;
+  const formatValue = (v: number) => Number.isInteger(v) ? String(v) : String(Number(v.toFixed(2)));
   return (
     <div>
       <div className="flex justify-between mb-2">
@@ -129,6 +134,22 @@ export function SliderInput({ label, min, max, value, step, onChange }: any) {
       <input type="range" min={min} max={max} step={step} value={value}
         onChange={e => onChange(parseFloat(e.target.value))}
         className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+      {passRange && (
+        <div className="mt-1.5">
+          <div className="relative h-3 mx-1">
+            <div
+              className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-emerald-500/35 border border-emerald-500/50"
+              style={{ left: `${passStart}%`, width: `${Math.max(2, passEnd - passStart)}%` }}
+            />
+            <span className="absolute top-0 h-3 w-px bg-emerald-600" style={{ left: `${passStart}%` }} />
+            <span className="absolute top-0 h-3 w-px bg-emerald-600" style={{ left: `${passEnd}%` }} />
+          </div>
+          <div className="flex justify-between text-[10px] leading-tight text-slate-500">
+            <span>{t('PASS Range')}: {formatValue(passRange.min)}-{formatValue(passRange.max)}</span>
+            <span>{t('Target')}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

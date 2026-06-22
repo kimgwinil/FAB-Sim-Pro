@@ -111,9 +111,9 @@ MTBF (Hours)    : ${mtbf.toLocaleString(undefined, {maximumFractionDigits: 0})} 
                  ))}
                </div>
              </div>
-             <SliderInput label={t('Burn-in Temp (°C)')} min={85} max={150} value={burninTemp} step={5}
+             <SliderInput label={t('Burn-in Temp (°C)')} min={85} max={150} value={burninTemp} step={5} passRange={{ min: 110, max: 135 }}
               onChange={(v: number) => setTestInputs({...testInputs, burninTemp: v})} />
-              <SliderInput label={t('Burn-in Time (Hours)')} min={24} max={168} value={burninTime} step={12}
+              <SliderInput label={t('Burn-in Time (Hours)')} min={24} max={168} value={burninTime} step={12} passRange={{ min: 72, max: 144 }}
               onChange={(v: number) => setTestInputs({...testInputs, burninTime: v})} />
           </CardContent>
         </Card>
